@@ -118,6 +118,27 @@ export const campaignSchema = z
 export type CampaignFormValues = z.input<typeof campaignSchema>;
 export type CampaignInput = z.output<typeof campaignSchema>;
 
+export const newPostSchema = z.object({
+  channelId: z.uuid("required"),
+  title: z.string().trim().min(1, "required").max(200, "tooLong"),
+  campaignId: z.union([z.literal(""), z.uuid()]).transform((v) => (v === "" ? null : v)),
+  plannedOn: z.union([z.literal(""), dateOnly]).transform((v) => (v === "" ? null : v)),
+  status: z.enum(["idea", "draft"]),
+});
+export type NewPostFormValues = z.input<typeof newPostSchema>;
+
+/** Automatisch gespeicherte Felder im Editor */
+export const postContentSchema = z.object({
+  title: z.string().max(200, "tooLong"),
+  body: z.string().max(63206, "tooLong"),
+  internalNotes: z.string().max(5000, "tooLong"),
+  channelId: z.uuid(),
+  campaignId: z.uuid().nullable(),
+  plannedOn: dateOnly.nullable(),
+  scheduledAt: z.iso.datetime({ offset: true }).nullable(),
+});
+export type PostContentInput = z.infer<typeof postContentSchema>;
+
 export const inviteSchema = z.object({
   email: emailSchema,
   role: z.enum(["owner", "editor", "external", "viewer"]),

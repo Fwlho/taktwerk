@@ -8,9 +8,9 @@ import { colorToken } from "@/lib/tokens";
 import "./globals.css";
 
 // Schriften werden beim Build heruntergeladen und von uns ausgeliefert (keine Anfragen an Google).
-const sans = Atkinson_Hyperlegible_Next({ subsets: ["latin"], variable: "--font-loaded-sans", display: "swap" });
-const mono = Atkinson_Hyperlegible_Mono({ subsets: ["latin"], variable: "--font-loaded-mono", display: "swap" });
-const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-loaded-display", display: "swap" });
+const sans = Atkinson_Hyperlegible_Next({ subsets: ["latin"], variable: "--font-loaded-sans", display: "swap", adjustFontFallback: false });
+const mono = Atkinson_Hyperlegible_Mono({ subsets: ["latin"], variable: "--font-loaded-mono", display: "swap", adjustFontFallback: false });
+const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-loaded-display", display: "swap", adjustFontFallback: false });
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");

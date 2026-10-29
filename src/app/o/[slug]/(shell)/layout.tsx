@@ -3,11 +3,12 @@ import { MobileNav } from "@/components/nav/MobileNav";
 import { MobileTopBar } from "@/components/nav/MobileTopBar";
 import { SidebarNav } from "@/components/nav/SidebarNav";
 import { getOrgContext } from "@/server/auth/session";
+import { countPendingApprovals } from "@/server/posts/queries";
 
 export default async function ShellLayout({ children, params }: { children: ReactNode; params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, organization, role } = await getOrgContext(slug);
-  const pendingApprovals = 0; // Freigaben folgen in Phase 2
+  const pendingApprovals = role === "owner" || role === "editor" ? await countPendingApprovals(organization.id) : 0;
 
   return (
     <div className="flex min-h-dvh bg-bg">

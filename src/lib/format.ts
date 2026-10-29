@@ -56,6 +56,44 @@ export function formatDateTime(iso: string): string {
   return `${day} · ${time}`;
 }
 
+/** Datum + Uhrzeit in Berliner Ortszeit → ISO-Zeitpunkt (UTC), sommerzeitfest */
+export function berlinLocalToIso(date: string, time: string): string {
+  const [y, mo, d] = date.split("-").map(Number);
+  const [h, mi] = time.split(":").map(Number);
+  const guess = Date.UTC(y!, mo! - 1, d!, h!, mi!);
+  const offsetAt = (ms: number) => {
+    const parts = Object.fromEntries(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: TZ,
+        hourCycle: "h23",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+        .formatToParts(new Date(ms))
+        .map((p) => [p.type, p.value]),
+    );
+    return Date.UTC(+parts.year!, +parts.month! - 1, +parts.day!, +parts.hour!, +parts.minute!) - ms;
+  };
+  const ms = guess - offsetAt(guess - offsetAt(guess));
+  return new Date(ms).toISOString();
+}
+
+/** ISO-Zeitpunkt → { date, time } in Berliner Ortszeit */
+export function isoToBerlinLocal(iso: string): { date: string; time: string } {
+  const d = new Date(iso);
+  const date = new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(d);
+  const time = new Intl.DateTimeFormat("de-DE", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(d);
+  return { date, time };
+}
+
+/** Heute (YYYY-MM-DD) in Berlin */
+export function todayBerlin(now = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(now);
+}
+
 /** Tage bis zum Datum (heute = 0), Berlin-Zeit */
 export function daysUntil(dateOnly: string, now = new Date()): number {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(now);
