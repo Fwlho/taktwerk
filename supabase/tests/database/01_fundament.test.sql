@@ -34,18 +34,18 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-00000000000e', 'eva@test.de',    '{"full_name":"Eva Extern"}'),
   ('00000000-0000-0000-0000-00000000000f', 'finn@test.de',   '{"full_name":"Finn Neu"}');
 
-select is((select count(*)::int from public.profiles), 6, 'Profil wird bei Registrierung angelegt');
+select is((select count(*)::int from public.profiles where id::text like '00000000-0000-0000-0000-0000000000%'), 6, 'Profil wird bei Registrierung angelegt');
 
 -- Unternehmen anlegen
 select pg_temp.login('00000000-0000-0000-0000-00000000000a');
-select lives_ok($$ select public.create_organization('Malerei Krause', 'malerei-krause') $$, 'Anna legt Unternehmen an');
+select lives_ok($$ select public.create_organization('Malerei Krause', 'pgtap-malerei-krause') $$, 'Anna legt Unternehmen an');
 select pg_temp.login('00000000-0000-0000-0000-00000000000b');
-select lives_ok($$ select public.create_organization('Bäckerei Fremd', 'baeckerei-fremd') $$, 'Ben legt Unternehmen an');
+select lives_ok($$ select public.create_organization('Bäckerei Fremd', 'pgtap-baeckerei-fremd') $$, 'Ben legt Unternehmen an');
 select pg_temp.logout();
 
 create temp table ids as
-select (select id from public.organizations where slug = 'malerei-krause') as org1,
-       (select id from public.organizations where slug = 'baeckerei-fremd') as org2;
+select (select id from public.organizations where slug = 'pgtap-malerei-krause') as org1,
+       (select id from public.organizations where slug = 'pgtap-baeckerei-fremd') as org2;
 grant select on ids to authenticated;
 
 insert into public.memberships (organization_id, user_id, role)
