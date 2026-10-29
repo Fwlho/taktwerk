@@ -1,4 +1,4 @@
-# Datenbankschema (Vorschlag, wartet auf Freigabe)
+# Datenbankschema (freigegeben 2026-10-29)
 
 Alle IDs `uuid` (`gen_random_uuid()`), Zeitstempel `timestamptz`, Geld in Cent (`bigint`). Jede fachliche Tabelle: `organization_id` + RLS. Löschen eines Unternehmens kaskadiert (`ON DELETE CASCADE`) über alle Tabellen.
 

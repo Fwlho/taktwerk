@@ -72,7 +72,7 @@ docs/                   Entscheidungen, Schema
 - Commits: Deutsch, Präfix `feat:`, `fix:`, `chore:`, `test:`, `docs:`.
 
 ## Phasenplan
-- [ ] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✗ (URL fehlt), CLAUDE.md ✓, DB-Schema (wartet auf Freigabe)
+- [ ] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✗ (URL fehlt), CLAUDE.md ✓, DB-Schema freigegeben ✓ (`docs/datenbankschema.md`)
 - [ ] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil
 - [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push, Asset-Bibliothek
 - [ ] **3 – KI-Assistent:** Ideen, Texte, Kanalanpassung, Kampagnenvorschläge
