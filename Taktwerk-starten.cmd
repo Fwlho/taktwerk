@@ -41,10 +41,32 @@ exit /b 1
 
 :dbok
 echo        Datenbank laeuft.
+
+rem Schneller Betriebsmodus: App nur nach Updates neu bauen
+set "HEAD="
+set "BUILT="
+for /f %%i in ('git rev-parse HEAD 2^>nul') do set "HEAD=%%i"
+if exist ".next\build-commit.txt" set /p BUILT=<".next\build-commit.txt"
+if not exist ".next\BUILD_ID" goto build
+if not "%HEAD%"=="%BUILT%" goto build
+goto run
+
+:build
+echo  [3/4] App wird vorbereitet (nur nach Updates, ca. 2-4 Minuten) ...
+call npm run build >".next-build.log" 2>&1
+if errorlevel 1 (
+  echo.
+  echo  Vorbereitung fehlgeschlagen. Bitte Claude Bescheid geben ^(Datei .next-build.log^).
+  pause
+  exit /b 1
+)
+>".next\build-commit.txt" echo %HEAD%
+
+:run
 echo  [3/4] App starten ...
 echo  [4/4] Browser oeffnet sich gleich: http://localhost:3000
-start "" cmd /c "timeout /t 15 /nobreak >nul & start http://localhost:3000"
+start "" cmd /c "timeout /t 6 /nobreak >nul & start http://localhost:3000"
 echo.
 echo  Zum Beenden dieses Fenster schliessen.
 echo.
-call npm run dev
+call npm start

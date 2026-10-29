@@ -26,3 +26,6 @@ Thumbs.db
 # Tests
 test-results/
 playwright-report/
+
+# Build-Protokoll der Startdatei
+.next-build.log

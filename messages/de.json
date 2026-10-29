@@ -195,7 +195,7 @@
     "intro": "Hier siehst du, was als Nächstes dran ist.",
     "thisWeek": "Diese Woche",
     "weekEmptyTitle": "Noch nichts geplant",
-    "weekEmptyText": "Sobald Beiträge geplant sind, erscheinen sie hier.",
+    "weekEmptyText": "Plane Beiträge im Kalender oder in der Pipeline – sie erscheinen dann hier.",
     "checklist": {
       "title": "Erste Schritte",
       "profile": "Unternehmensprofil ausfüllen",
@@ -205,7 +205,29 @@
       "open": "offen",
       "start": "Jetzt ausfüllen",
       "soon": "Bald"
-    }
+    },
+    "weekSummary": "{count, plural, =0 {Diese Woche ist noch nichts geplant.} one {Diese Woche ist # Beitrag geplant.} other {Diese Woche sind # Beiträge geplant.}}",
+    "approveNow": "Jetzt freigeben",
+    "showApprovals": "Ansehen",
+    "pendingOwner": "{count, plural, one {# Beitrag wartet auf deine Freigabe.} other {# Beiträge warten auf deine Freigabe.}}",
+    "pendingOthers": "{count, plural, one {# Beitrag wartet auf Freigabe.} other {# Beiträge warten auf Freigabe.}}",
+    "firstAt": "Der erste soll {when} erscheinen.",
+    "figures": "Überblick",
+    "tiles": {
+      "plannedWeek": "Diese Woche geplant",
+      "pending": "Wartet auf Freigabe",
+      "running": "Laufende Kampagnen",
+      "published": "Veröffentlicht (Monat)"
+    },
+    "todayTomorrow": "Heute & morgen",
+    "toCalendar": "Zum Kalender",
+    "today": "heute",
+    "planNow": "Woche planen",
+    "nothingToday": "Heute und morgen ist nichts geplant.",
+    "runningCampaigns": "Laufende Kampagnen",
+    "until": "bis {date}",
+    "postCount": "{count, plural, one {# Beitrag} other {# Beiträge}}",
+    "activity": "Letzte Aktivität"
   },
   "onboarding": {
     "title": "Einrichtung",
@@ -274,7 +296,8 @@
       "save": "Speichern",
       "renamed": "Name gespeichert",
       "profileTitle": "Unternehmensprofil",
-      "profileIntro": "Grundlage für die Vorschläge des Assistenten."
+      "profileIntro": "Grundlage für die Vorschläge des Assistenten.",
+      "nameHint": "Name eures Betriebs. Deinen eigenen Namen änderst du unter „Konto“."
     },
     "team": {
       "membersTitle": "{count, plural, one {# Person} other {# Personen}}",
@@ -497,7 +520,8 @@
         "planned_on": "den Tag",
         "scheduled_at": "den Termin",
         "group_id": "die Verknüpfung"
-      }
+      },
+      "untitled": "Ohne Titel"
     },
     "editor": {
       "back": "Beiträge",

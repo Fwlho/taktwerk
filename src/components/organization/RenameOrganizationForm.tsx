@@ -26,6 +26,7 @@ export function RenameOrganizationForm({ slug, name, readOnly }: { slug: string;
       {result?.error && <Banner kind="error">{te(result.error)}</Banner>}
       <TextField
         label={t("name")}
+        hint={t("nameHint")}
         disabled={readOnly}
         className="flex-1"
         error={errors.name?.message && tv(errors.name.message)}

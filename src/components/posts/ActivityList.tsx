@@ -1,14 +1,26 @@
 "use client";
 
+import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import type { PostThread } from "@/server/posts/queries";
 import type { MemberInfo } from "./PostCard";
 
-type Entry = PostThread["activity"][number];
+type Entry = PostThread["activity"][number] & { post_id?: string | null };
 type Change = { from?: unknown; to?: unknown } | string | unknown;
 
 /** Verlauf: wer hat was wann geändert (ohne Inhalte). */
-export function ActivityList({ entries, members }: { entries: Entry[]; members: Map<string, MemberInfo> }) {
+export function ActivityList({
+  entries,
+  members,
+  postTitles,
+  slug,
+}: {
+  entries: Entry[];
+  members: Map<string, MemberInfo>;
+  /** Für die Startseite: Titel der betroffenen Beiträge mit Link */
+  postTitles?: Record<string, string>;
+  slug?: string;
+}) {
   const t = useTranslations("posts.activity");
   const ts = useTranslations("posts.status");
   const format = useFormatter();
@@ -42,6 +54,11 @@ export function ActivityList({ entries, members }: { entries: Entry[]; members: 
           <span className="text-small">
             <b className="font-semibold">{(e.actor_id && members.get(e.actor_id)?.fullName) || t("system")}</b> {describe(e)}
           </span>
+          {postTitles && slug && e.post_id && postTitles[e.post_id] !== undefined && (
+            <Link href={`/o/${slug}/posts/${e.post_id}`} className="truncate text-small text-primary hover:underline">
+              {postTitles[e.post_id] || t("untitled")}
+            </Link>
+          )}
           <time dateTime={e.created_at} className="text-caption font-normal text-text-muted">
             {format.dateTime(new Date(e.created_at), { dateStyle: "medium", timeStyle: "short" })}
           </time>
