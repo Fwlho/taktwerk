@@ -1,7 +1,7 @@
 -- Mandantentrennung und Rollenrechte – Phase 1
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(33);
+select plan(35);
 
 -- Hilfsfunktionen: als Nutzer anmelden / abmelden
 create function pg_temp.login(uid uuid) returns void language plpgsql as $$
@@ -14,6 +14,15 @@ create function pg_temp.logout() returns void language plpgsql as $$
 begin
   perform set_config('role', 'postgres', true);
   perform set_config('request.jwt.claims', '', true);
+end $$;
+
+-- Anzahl betroffener Zeilen einer Änderung (läuft mit den Rechten der angemeldeten Rolle)
+create function pg_temp.affected(stmt text) returns int language plpgsql as $$
+declare n int;
+begin
+  execute stmt;
+  get diagnostics n = row_count;
+  return n;
 end $$;
 
 -- Testnutzer
@@ -63,14 +72,10 @@ select is((select count(*)::int from public.organization_profiles p, ids where p
           'Fremdes Unternehmensprofil ist unsichtbar');
 select is((select count(*)::int from public.profiles where id = '00000000-0000-0000-0000-00000000000a'), 0,
           'Profile fremder Personen sind unsichtbar');
-select is((with u as (update public.organizations set name = 'Gehackt' where id = (select org1 from ids) returning 1)
-           select count(*)::int from u), 0, 'Fremdes Unternehmen nicht änderbar');
-select is((with u as (update public.organization_profiles set tone = 'x' where organization_id = (select org1 from ids) returning 1)
-           select count(*)::int from u), 0, 'Fremdes Profil nicht änderbar');
-select is((with d as (delete from public.organizations where id = (select org1 from ids) returning 1)
-           select count(*)::int from d), 0, 'Fremdes Unternehmen nicht löschbar');
-select is((with d as (delete from public.memberships where organization_id = (select org1 from ids) returning 1)
-           select count(*)::int from d), 0, 'Fremde Mitglieder nicht entfernbar');
+select is(pg_temp.affected($q$update public.organizations set name = 'Gehackt' where id = (select org1 from ids)$q$), 0, 'Fremdes Unternehmen nicht änderbar');
+select is(pg_temp.affected($q$update public.organization_profiles set tone = 'x' where organization_id = (select org1 from ids)$q$), 0, 'Fremdes Profil nicht änderbar');
+select is(pg_temp.affected($q$delete from public.organizations where id = (select org1 from ids)$q$), 0, 'Fremdes Unternehmen nicht löschbar');
+select is(pg_temp.affected($q$delete from public.memberships where organization_id = (select org1 from ids)$q$), 0, 'Fremde Mitglieder nicht entfernbar');
 select throws_ok($$ insert into public.invitations (organization_id, email, role, token_hash)
                     select org1, 'ben2@test.de', 'owner', repeat('a', 64) from ids $$,
                  '42501', null, 'Keine Einladung in fremdes Unternehmen');
@@ -84,19 +89,15 @@ select throws_ok($$ insert into public.memberships (organization_id, user_id, ro
 select pg_temp.login('00000000-0000-0000-0000-00000000000c'); -- editor
 select is((select count(*)::int from public.profiles where id = '00000000-0000-0000-0000-00000000000a'), 1,
           'Mitglieder sehen Profile im selben Unternehmen');
-select is((with u as (update public.organizations set name = 'Neu' where id = (select org1 from ids) returning 1)
-           select count(*)::int from u), 0, 'Editor darf Unternehmensnamen nicht ändern');
-select is((with u as (update public.organization_profiles set tone = 'freundlich' where organization_id = (select org1 from ids) returning 1)
-           select count(*)::int from u), 1, 'Editor darf Unternehmensprofil ändern');
-select is((with u as (update public.memberships set role = 'owner' where organization_id = (select org1 from ids) and user_id = '00000000-0000-0000-0000-00000000000c' returning 1)
-           select count(*)::int from u), 0, 'Editor kann sich nicht selbst befördern');
+select is(pg_temp.affected($q$update public.organizations set name = 'Neu' where id = (select org1 from ids)$q$), 0, 'Editor darf Unternehmensnamen nicht ändern');
+select is(pg_temp.affected($q$update public.organization_profiles set tone = 'freundlich' where organization_id = (select org1 from ids)$q$), 1, 'Editor darf Unternehmensprofil ändern');
+select is(pg_temp.affected($q$update public.memberships set role = 'owner' where organization_id = (select org1 from ids) and user_id = '00000000-0000-0000-0000-00000000000c'$q$), 0, 'Editor kann sich nicht selbst befördern');
 select throws_ok($$ insert into public.invitations (organization_id, email, role, token_hash)
                     select org1, 'x@test.de', 'editor', repeat('b', 64) from ids $$,
                  '42501', null, 'Editor darf nicht einladen');
 
 select pg_temp.login('00000000-0000-0000-0000-00000000000d'); -- viewer
-select is((with u as (update public.organization_profiles set tone = 'x' where organization_id = (select org1 from ids) returning 1)
-           select count(*)::int from u), 0, 'Viewer darf nichts ändern');
+select is(pg_temp.affected($q$update public.organization_profiles set tone = 'x' where organization_id = (select org1 from ids)$q$), 0, 'Viewer darf nichts ändern');
 
 select pg_temp.login('00000000-0000-0000-0000-00000000000e'); -- external
 select is((select count(*)::int from public.invitations), 0, 'Externe sehen keine Einladungen');
@@ -135,6 +136,16 @@ select is((select role::text from public.memberships m, ids where m.organization
            and m.user_id = '00000000-0000-0000-0000-00000000000f'), 'editor', 'Rolle aus Einladung übernommen');
 select throws_ok($$ select public.accept_invitation('token-finn') $$, 'P0002', 'invitation_invalid',
                  'Einladung nur einmal verwendbar');
+
+-- ---------------------------------------------------------------------------
+-- Löschen des ganzen Unternehmens (DSGVO) trotz Inhaber-Schutz
+-- ---------------------------------------------------------------------------
+select pg_temp.login('00000000-0000-0000-0000-00000000000a');
+select is(pg_temp.affected($q$delete from public.organizations where id = (select org1 from ids)$q$), 1,
+          'Inhaberin kann ihr Unternehmen löschen');
+select pg_temp.logout();
+select is((select count(*)::int from public.memberships m, ids where m.organization_id = ids.org1), 0,
+          'Mitgliedschaften werden mitgelöscht');
 
 -- ---------------------------------------------------------------------------
 -- Anonym: kein Zugriff

@@ -11,6 +11,9 @@ export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: false,
   retries: 0,
+  // Dev-Server kompiliert Seiten beim ersten Aufruf – großzügige Wartezeiten
+  timeout: 90_000,
+  expect: { timeout: 20_000 },
   use: {
     baseURL: "http://localhost:3000",
     locale: "de-DE",

@@ -4,6 +4,11 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { SettingsTabs } from "@/components/organization/SettingsTabs";
 import { getOrgContext } from "@/server/auth/session";
 
+export async function generateMetadata() {
+  const tn = await getTranslations("settings");
+  return { title: tn("title") };
+}
+
 export default async function SettingsLayout({ children, params }: { children: ReactNode; params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { role } = await getOrgContext(slug);

@@ -49,7 +49,7 @@ export function EmptyState({ kind, title, text, actions, inline, className }: Em
       )}
     >
       {!inline && <Art kind={kind} />}
-      <h2 className="text-h2">{title}</h2>
+      {inline ? <p className="text-h3">{title}</p> : <h2 className="text-h2">{title}</h2>}
       {text && <p className="text-body text-text-muted">{text}</p>}
       {actions && <div className="mt-2 flex flex-wrap justify-center gap-2">{actions}</div>}
     </div>
