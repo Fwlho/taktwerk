@@ -100,7 +100,7 @@ export function InviteButton({ slug }: { slug: string }) {
               label={t("email")}
               type="email"
               autoComplete="off"
-              autoFocus
+              data-autofocus
               error={errors.email?.message && tv(errors.email.message)}
               {...form.register("email")}
             />

@@ -34,7 +34,14 @@ export function Modal({ open, onClose, title, subtitle, icon, variant = "default
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      dialog.showModal();
+      // Fokus aufs erste Feld (bzw. auf „Behalten“ bei Bestätigungen), nicht auf das X
+      const target =
+        dialog.querySelector<HTMLElement>("[data-autofocus]") ??
+        dialog.querySelector<HTMLElement>("input:not([type=hidden]):not(.sr-only), select, textarea");
+      target?.focus();
+    }
     if (!open && dialog.open) dialog.close();
   }, [open]);
 

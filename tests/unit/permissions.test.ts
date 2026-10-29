@@ -36,8 +36,8 @@ describe("Rollenrechte", () => {
 describe("Navigation je Rolle", () => {
   const keys = (role: Parameters<typeof navItemsFor>[0]) => navItemsFor(role).map((i) => i.key);
 
-  it("Externe sehen nur Kalender, Kampagnen, Beiträge und Einstellungen", () => {
-    expect(keys("external")).toEqual(["calendar", "campaigns", "posts", "settings"]);
+  it("Externe sehen nur Wochenplan, Kalender, Kampagnen, Beiträge, Mediathek und Einstellungen", () => {
+    expect(keys("external")).toEqual(["week", "calendar", "campaigns", "posts", "assets", "settings"]);
   });
 
   it("Betrachter sehen keine Freigaben", () => {
@@ -45,7 +45,7 @@ describe("Navigation je Rolle", () => {
   });
 
   it("Inhaber sehen alles in Design-Reihenfolge", () => {
-    expect(keys("owner")).toEqual(["dashboard", "calendar", "campaigns", "posts", "approvals", "reports", "channels", "settings"]);
+    expect(keys("owner")).toEqual(["dashboard", "week", "calendar", "campaigns", "posts", "assets", "approvals", "reports", "channels", "settings"]);
   });
 
   it("Startseite: Externe ohne Dashboard", () => {

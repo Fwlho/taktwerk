@@ -13,11 +13,15 @@ const PERMISSIONS = {
   "members.view": ["owner", "editor", "external", "viewer"],
   "members.manage": ["owner"],
   "invitations.manage": ["owner"],
-  "nav.approvals": ["owner", "editor", "external"],
-  "nav.reports": ["owner", "editor", "viewer"],
-  "nav.dashboard": ["owner", "editor", "viewer"],
-  "nav.channels": ["owner", "editor", "viewer"],
-  "nav.settings": ["owner", "editor", "external", "viewer"],
+  "channels.manage": ["owner"],
+  "campaigns.create": ["owner", "editor"],
+  "campaigns.update": ["owner", "editor"],
+  "campaigns.delete": ["owner"],
+  "posts.create": ["owner", "editor"],
+  "posts.delete": ["owner", "editor"],
+  "posts.assign": ["owner", "editor"],
+  "posts.approve": ["owner"],
+  "posts.schedule": ["owner", "editor"],
 } as const satisfies Record<string, readonly MemberRole[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

@@ -104,7 +104,7 @@ export function MemberRow({
         title={isSelf ? t("leaveTitle") : t("removeTitle", { name })}
         footer={
           <>
-            <Button onClick={() => setConfirm(false)} disabled={pending} autoFocus>
+            <Button onClick={() => setConfirm(false)} disabled={pending} data-autofocus>
               {t("keep")}
             </Button>
             <Button variant="danger" loading={pending} onClick={onRemove}>

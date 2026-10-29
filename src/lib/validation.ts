@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseEuroToCents } from "./format";
 
 // Fehlermeldungen sind Übersetzungsschlüssel unter "validation.*" (messages/de.json).
 
@@ -87,6 +88,35 @@ export function columnsToVoice(addressForm: "du" | "sie", tone: string | null): 
       ? "du_casual"
       : "sie_friendly";
 }
+
+const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date");
+
+export const campaignSchema = z
+  .object({
+    name: z.string().trim().min(2, "nameMin").max(120, "tooLong"),
+    goal: z.enum(["inquiries", "recruiting", "awareness", "event", "other"]),
+    goalDescription: z
+      .string()
+      .trim()
+      .max(500, "tooLong")
+      .transform((v) => (v === "" ? null : v)),
+    goalTarget: z
+      .string()
+      .trim()
+      .refine((v) => v === "" || /^\d{1,7}$/.test(v), "wholeNumber")
+      .transform((v) => (v === "" ? null : Number(v))),
+    startDate: dateOnly,
+    endDate: z.union([z.literal(""), dateOnly]).transform((v) => (v === "" ? null : v)),
+    budget: z
+      .string()
+      .refine((v) => parseEuroToCents(v) !== null, "euro")
+      .transform((v) => parseEuroToCents(v) ?? 0),
+    status: z.enum(["draft", "running", "paused", "completed"]),
+    channelIds: z.array(z.uuid()).max(6),
+  })
+  .refine((v) => !v.endDate || v.endDate >= v.startDate, { message: "endBeforeStart", path: ["endDate"] });
+export type CampaignFormValues = z.input<typeof campaignSchema>;
+export type CampaignInput = z.output<typeof campaignSchema>;
 
 export const inviteSchema = z.object({
   email: emailSchema,

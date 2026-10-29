@@ -1,10 +1,12 @@
 import {
   CalendarDays,
+  CalendarRange,
   ChartLine,
   CircleCheckBig,
   Columns3,
   Flag,
   House,
+  Images,
   LayoutDashboard,
   Plug,
   Settings,
@@ -13,7 +15,7 @@ import {
 import type { MemberRole } from "@/server/db/database.types";
 
 export type NavItem = {
-  key: "dashboard" | "calendar" | "campaigns" | "posts" | "approvals" | "reports" | "channels" | "settings";
+  key: "dashboard" | "week" | "calendar" | "campaigns" | "posts" | "assets" | "approvals" | "reports" | "channels" | "settings";
   /** Pfad relativ zu /o/[slug] */
   path: string;
   icon: LucideIcon;
@@ -24,12 +26,14 @@ export type NavItem = {
 const ALL: readonly MemberRole[] = ["owner", "editor", "external", "viewer"];
 const INTERNAL: readonly MemberRole[] = ["owner", "editor", "viewer"];
 
-// Reihenfolge und Icons laut design/project/components/SidebarNav
+// Reihenfolge und Icons laut design/project/components/SidebarNav; Wochenplan und Mediathek ergänzt (freigegeben)
 export const NAV_ITEMS: readonly NavItem[] = [
   { key: "dashboard", path: "", icon: LayoutDashboard, roles: INTERNAL, section: "main" },
+  { key: "week", path: "/week", icon: CalendarRange, roles: ALL, section: "main" },
   { key: "calendar", path: "/calendar", icon: CalendarDays, roles: ALL, section: "main" },
   { key: "campaigns", path: "/campaigns", icon: Flag, roles: ALL, section: "main" },
   { key: "posts", path: "/posts", icon: Columns3, roles: ALL, section: "main" },
+  { key: "assets", path: "/assets", icon: Images, roles: ALL, section: "main" },
   { key: "approvals", path: "/approvals", icon: CircleCheckBig, roles: ["owner", "editor"], section: "main" },
   { key: "reports", path: "/reports", icon: ChartLine, roles: INTERNAL, section: "main" },
   { key: "channels", path: "/channels", icon: Plug, roles: INTERNAL, section: "company" },

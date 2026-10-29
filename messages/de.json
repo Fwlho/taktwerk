@@ -14,7 +14,11 @@
     "passwordMismatch": "Die Passwörter stimmen nicht überein.",
     "nameMin": "Bitte mindestens 2 Zeichen eingeben.",
     "tooLong": "Bitte kürzer fassen.",
-    "url": "Bitte eine Webadresse eingeben, z. B. malerei-krause.de."
+    "url": "Bitte eine Webadresse eingeben, z. B. malerei-krause.de.",
+    "date": "Bitte ein Datum wählen.",
+    "wholeNumber": "Bitte eine ganze Zahl eingeben, z. B. 30.",
+    "euro": "Bitte einen Betrag eingeben, z. B. 1.200 oder 1.200,50.",
+    "endBeforeStart": "Das Ende liegt vor dem Start."
   },
   "errors": {
     "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal.",
@@ -32,7 +36,14 @@
       "title": "Seite nicht gefunden",
       "text": "Den Link gibt es nicht oder du hast keinen Zugriff darauf.",
       "home": "Zur Startseite"
-    }
+    },
+    "commentRequired": "Bitte schreib kurz, was geändert werden soll.",
+    "scheduleRequired": "Bitte zuerst einen Termin in der Zukunft wählen.",
+    "publishedLocked": "Veröffentlichte Beiträge lassen sich nicht mehr ändern.",
+    "assigneeViewer": "Betrachter können nicht zugewiesen werden.",
+    "duplicate": "Das gibt es schon.",
+    "channelHasPosts": "Dieser Kanal hat noch Beiträge. Lösche oder verschiebe sie zuerst.",
+    "gone": "Das gibt es nicht mehr – vielleicht wurde es gelöscht."
   },
   "auth": {
     "email": "E-Mail",
@@ -128,7 +139,9 @@
       "approvals": "Freigaben",
       "reports": "Auswertung",
       "channels": "Kanäle",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "week": "Wochenplan",
+      "assets": "Mediathek"
     },
     "roles": {
       "owner": "Inhaber",
@@ -165,7 +178,9 @@
       "approvals": "Bald gibst du hier Beiträge mit einem Tipp frei.",
       "reports": "Bald siehst du hier verständlich, was deine Beiträge gebracht haben.",
       "channels": "Bald verbindest du hier Instagram, Facebook und weitere Kanäle.",
-      "settings": ""
+      "settings": "",
+      "week": "Bald bereitest du hier die ganze Woche pro Plattform vor.",
+      "assets": "Bald verwaltest du hier Bilder, Videos und Logos."
     }
   },
   "dashboard": {
@@ -319,6 +334,146 @@
       "system": "Wie Gerät",
       "light": "Hell",
       "dark": "Dunkel"
+    }
+  },
+  "posts": {
+    "status": {
+      "idea": "Idee",
+      "draft": "Entwurf",
+      "in_review": "Zur Freigabe",
+      "changes_requested": "Änderung gewünscht",
+      "approved": "Freigegeben",
+      "scheduled": "Geplant",
+      "published": "Veröffentlicht",
+      "evaluated": "Ausgewertet"
+    }
+  },
+  "channels": {
+    "title": "Kanäle",
+    "intro": "Wo du Beiträge veröffentlichst. Die Verbindung zu den Plattformen folgt später – planen kannst du schon jetzt.",
+    "types": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
+      "tiktok": "TikTok",
+      "offline": "Offline"
+    },
+    "descriptions": {
+      "instagram": "Bilder, Reels und Storys",
+      "facebook": "Beiträge und Veranstaltungen",
+      "youtube": "Videos und Shorts",
+      "linkedin": "Für Fachkräfte und Geschäftskunden",
+      "tiktok": "Kurze Videos",
+      "offline": "Flyer, Plakate, Fahrzeug, Messen, Anzeigen"
+    },
+    "connection": {
+      "not_connected": "Nicht verbunden",
+      "connected": "Verbunden",
+      "expired": "Verbindung abgelaufen",
+      "error": "Verbindungsfehler"
+    },
+    "offlineReady": "Bereit",
+    "connectLater": "Automatisch veröffentlichen kannst du, sobald die Plattform-Anbindung verfügbar ist.",
+    "connect": "Kanal verbinden",
+    "add": "Kanal hinzufügen",
+    "added": "{name} hinzugefügt",
+    "remove": "Entfernen",
+    "removed": "{name} entfernt",
+    "notAdded": "Noch nicht hinzugefügt",
+    "removeTitle": "{name} entfernen?",
+    "removeText": "Der Kanal verschwindet aus Planung und Filtern. Das geht nur, solange er keine Beiträge hat.",
+    "keep": "Behalten",
+    "addNamed": "{name} hinzufügen"
+  },
+  "campaigns": {
+    "title": "Kampagnen",
+    "summary": "{count, plural, one {# Kampagne} other {# Kampagnen}} · {running} {running, plural, one {läuft} other {laufen}} gerade",
+    "new": "Neue Kampagne",
+    "newTile": "Neue Kampagne anlegen",
+    "all": "Alle",
+    "filterLabel": "Nach Status filtern",
+    "search": "Kampagne suchen",
+    "sortLabel": "Sortierung",
+    "sort": {
+      "newest": "Neueste zuerst",
+      "start": "Nach Start",
+      "name": "Nach Name"
+    },
+    "emptyTitle": "Noch keine Kampagne",
+    "emptyText": "Eine Kampagne bündelt Beiträge zu einem Ziel, z. B. „30 Anfragen im Frühjahr“.",
+    "noResultsTitle": "Keine Treffer",
+    "noResultsText": "Keine Kampagne passt zu „{filter}“.",
+    "resetFilter": "Filter zurücksetzen",
+    "status": {
+      "draft": "Entwurf",
+      "running": "Läuft",
+      "paused": "Pausiert",
+      "completed": "Abgeschlossen"
+    },
+    "goals": {
+      "inquiries": "Mehr Anfragen",
+      "recruiting": "Neue Mitarbeitende",
+      "awareness": "Bekanntheit",
+      "event": "Veranstaltung",
+      "other": "Sonstiges"
+    },
+    "goalUnits": {
+      "inquiries": "Anfragen",
+      "recruiting": "Bewerbungen",
+      "awareness": "Kontakte",
+      "event": "Teilnehmende",
+      "other": "Ergebnisse"
+    },
+    "goalWithTarget": "Ziel: {target} {goal}",
+    "goalOnly": "Ziel: {goal}",
+    "from": "ab {date}",
+    "postCount": "{count, plural, one {# Beitrag} other {# Beiträge}}",
+    "budget": "Budget",
+    "of": "von",
+    "noChannels": "Noch keine Kanäle",
+    "daysLeft": "{count, plural, =0 {endet heute} one {noch # Tag} other {noch # Tage}}",
+    "figures": "Kennzahlen",
+    "goal": "Ziel erreicht",
+    "figuresLater": "Zahlen erscheinen nach dem ersten veröffentlichten Beitrag.",
+    "posts": "Beiträge",
+    "budgetPlanned": "Budget geplant",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "keep": "Behalten",
+    "deleteTitle": "„{name}“ löschen?",
+    "deleteText": "{count, plural, =0 {Die Kampagne wird gelöscht.} one {Die Kampagne wird gelöscht. Ihr # Beitrag bleibt erhalten, gehört dann aber zu keiner Kampagne mehr.} other {Die Kampagne wird gelöscht. Ihre # Beiträge bleiben erhalten, gehören dann aber zu keiner Kampagne mehr.}}",
+    "postsInCampaign": "Beiträge in dieser Kampagne",
+    "noPostsTitle": "Noch keine Beiträge",
+    "noPostsText": "Leg einen Beitrag an und ordne ihn dieser Kampagne zu.",
+    "untitled": "Ohne Titel",
+    "noDate": "Ohne Termin",
+    "table": {
+      "post": "Beitrag",
+      "status": "Status"
+    },
+    "form": {
+      "createTitle": "Neue Kampagne",
+      "editTitle": "Kampagne bearbeiten",
+      "subtitle": "Ziel, Zeitraum, Budget und Kanäle – alles später änderbar.",
+      "name": "Name",
+      "namePlaceholder": "z. B. Frühjahrsaktion Fassade",
+      "goal": "Ziel",
+      "goalTarget": "Zielwert",
+      "goalDescription": "Ziel in eigenen Worten",
+      "goalDescriptionPlaceholder": "z. B. von Privatkunden und Hausverwaltungen",
+      "startDate": "Start",
+      "endDate": "Ende",
+      "budget": "Budget in €",
+      "budgetHint": "Geplante Ausgaben für die ganze Kampagne.",
+      "status": "Status",
+      "channels": "Kanäle",
+      "noChannels": "Leg zuerst unter „Kanäle“ einen Kanal an.",
+      "cancel": "Abbrechen",
+      "create": "Kampagne anlegen",
+      "save": "Speichern",
+      "created": "Kampagne angelegt",
+      "saved": "Kampagne gespeichert"
     }
   }
 }
