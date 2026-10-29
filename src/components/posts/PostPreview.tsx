@@ -23,7 +23,17 @@ function renderText(text: string) {
 }
 
 /** Neutrale, vereinfachte Post-Darstellung je Kanal. */
-export function PostPreview({ channel, text, organizationName }: { channel: ChannelType; text: string; organizationName: string }) {
+export function PostPreview({
+  channel,
+  text,
+  organizationName,
+  image,
+}: {
+  channel: ChannelType;
+  text: string;
+  organizationName: string;
+  image?: { url: string | null; alt_text: string | null };
+}) {
   const t = useTranslations("posts.preview");
   const fold = FOLD[channel];
   const truncated = fold && text.length > fold;
@@ -52,9 +62,14 @@ export function PostPreview({ channel, text, organizationName }: { channel: Chan
         <span className="text-label">{organizationName}</span>
         <ChannelMono type={channel} size="sm" className="ml-auto" />
       </div>
-      <div className="flex aspect-square items-center justify-center bg-surface-sunken text-text-muted" aria-hidden>
-        <ImageIcon className="size-10" />
-      </div>
+      {image?.url ? (
+        // eslint-disable-next-line @next/next/no-img-element -- signierter Link
+        <img src={image.url} alt={image.alt_text ?? ""} className="aspect-square w-full object-cover" />
+      ) : (
+        <div className="flex aspect-square items-center justify-center bg-surface-sunken text-text-muted" aria-hidden>
+          <ImageIcon className="size-10" />
+        </div>
+      )}
       <p className="p-3 text-small whitespace-pre-wrap break-words">
         {text ? renderText(shown) : <span className="text-text-muted">{t("empty")}</span>}
         {truncated && <span className="text-text-muted"> … {t("more")}</span>}

@@ -69,7 +69,7 @@ export function Modal({ open, onClose, title, subtitle, icon, variant = "default
       {open && (
         <div
           className={cx(
-            "flex flex-col bg-surface shadow-lg",
+            "flex max-h-[92dvh] flex-col bg-surface shadow-lg tablet:max-h-[calc(100dvh-2*var(--space-6))]",
             "animate-[tw-sheet-in_var(--duration-slow)_var(--ease-standard)] rounded-t-xl pb-[env(safe-area-inset-bottom)]",
             "tablet:animate-[tw-modal-in_var(--duration-slow)_var(--ease-standard)] tablet:rounded-xl tablet:pb-0",
           )}
@@ -104,8 +104,8 @@ export function Modal({ open, onClose, title, subtitle, icon, variant = "default
               />
             )}
           </div>
-          {children && <div className="flex flex-col gap-4 px-6 py-4">{children}</div>}
-          {footer && <div className="flex flex-col-reverse gap-2 px-6 pb-6 pt-4 tablet:flex-row tablet:justify-end">{footer}</div>}
+          {children && <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain px-6 py-4">{children}</div>}
+          {footer && <div className="flex flex-none flex-col-reverse gap-2 border-t border-border px-6 pt-4 pb-6 tablet:flex-row tablet:justify-end">{footer}</div>}
         </div>
       )}
     </dialog>

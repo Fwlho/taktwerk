@@ -21,6 +21,8 @@ import type { MemberRole } from "@/server/db/database.types";
 import { deletePost, savePostContent, setAssignees, transferPost, transitionPost } from "@/server/posts/actions";
 import type { PostDetail, PostThread as Thread } from "@/server/posts/queries";
 import type { ChannelOption } from "@/components/campaigns/CampaignFormModal";
+import { PostMedia } from "@/components/assets/PostMedia";
+import type { AssetItem } from "@/server/assets/queries";
 import { ActivityList } from "./ActivityList";
 import type { CampaignOption } from "./NewPostModal";
 import type { MemberInfo } from "./PostCard";
@@ -53,6 +55,8 @@ export function PostEditor({
   campaigns,
   members,
   siblings,
+  media,
+  library,
 }: {
   slug: string;
   post: PostDetail;
@@ -64,6 +68,8 @@ export function PostEditor({
   campaigns: CampaignOption[];
   members: MemberInfo[];
   siblings: { id: string; status: PostStatus; channels: { type: ChannelOption["type"]; name: string } | null }[];
+  media: AssetItem[];
+  library: AssetItem[];
 }) {
   const t = useTranslations("posts.editor");
   const tc = useTranslations("channels.types");
@@ -400,12 +406,14 @@ export function PostEditor({
         onChange={(e) => update({ internalNotes: e.target.value })}
       />
 
-      <div className="flex flex-col gap-1.5">
-        <span className="text-label">{t("media")}</span>
-        <div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-border-strong text-small text-text-muted">
-          {t("mediaSoon")}
-        </div>
-      </div>
+      <PostMedia
+        slug={slug}
+        organizationId={post.organization_id}
+        postId={post.id}
+        linked={media}
+        library={library}
+        readOnly={!canEditText}
+      />
 
       {canEditMeta && (
         <fieldset className="flex flex-col gap-2">
@@ -492,7 +500,14 @@ export function PostEditor({
         </span>
       </div>
       {panel === "preview" ? (
-        channel && <PostPreview channel={channel.type} text={fields.body} organizationName={organizationName} />
+        channel && (
+          <PostPreview
+            channel={channel.type}
+            text={fields.body}
+            organizationName={organizationName}
+            image={media.find((m) => (m.kind === "image" || m.kind === "logo") && m.url)}
+          />
+        )
       ) : (
         <ActivityList entries={thread.activity} members={memberMap} />
       )}

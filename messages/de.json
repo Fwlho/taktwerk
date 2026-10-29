@@ -45,7 +45,8 @@
     "duplicate": "Das gibt es schon.",
     "channelHasPosts": "Dieser Kanal hat noch Beiträge. Lösche oder verschiebe sie zuerst.",
     "gone": "Das gibt es nicht mehr – vielleicht wurde es gelöscht.",
-    "conflict": "Jemand anderes hat den Beitrag gerade geändert."
+    "conflict": "Jemand anderes hat den Beitrag gerade geändert.",
+    "fileTooLarge": "Die Datei ist zu groß."
   },
   "auth": {
     "email": "E-Mail",
@@ -512,8 +513,6 @@
       "text": "Text",
       "notes": "Interne Notizen",
       "notesHint": "Nur für euch – z. B. Bildidee, Ansprechpartner, Drehort.",
-      "media": "Medien",
-      "mediaSoon": "Medien aus der Mediathek verknüpfen – kommt mit der Mediathek.",
       "assignees": "Zuständig",
       "assigneesHint": "Externe sehen nur Beiträge, denen sie zugewiesen sind.",
       "unnamed": "Ohne Namen",
@@ -754,5 +753,56 @@
     "dragNone": "Über keinem Termin.",
     "dragEnd": "Beitrag verschoben.",
     "dragCancel": "Verschieben abgebrochen."
+  },
+  "assets": {
+    "title": "Mediathek",
+    "intro": "Bilder, Videos und Logos für eure Beiträge – sicher gespeichert in Frankfurt.",
+    "upload": "Dateien hochladen",
+    "dropHint": "Oder hierher ziehen · Bilder bis 20 MB, Videos bis 50 MB",
+    "kinds": {
+      "image": "Bild",
+      "video": "Video",
+      "logo": "Logo",
+      "document": "Dokument"
+    },
+    "kindsPlural": {
+      "image": "Bilder",
+      "video": "Videos",
+      "logo": "Logos",
+      "document": "Dokumente"
+    },
+    "all": "Alle",
+    "filter": "Nach Art filtern",
+    "search": "Datei suchen",
+    "usedIn": "{count, plural, one {in # Beitrag} other {in # Beiträgen}}",
+    "usedInHint": "{count, plural, one {Wird in # Beitrag verwendet.} other {Wird in # Beiträgen verwendet.}}",
+    "emptyTitle": "Noch keine Dateien",
+    "emptyText": "Lade Fotos von Baustellen, Gerichten oder eurem Team hoch – dann sind sie für alle Beiträge griffbereit.",
+    "noResults": "Keine passende Datei",
+    "resetFilter": "Filter zurücksetzen",
+    "fileName": "Dateiname",
+    "altText": "Bildbeschreibung",
+    "altHint": "Beschreibt das Bild für Menschen, die es nicht sehen können. Wird auch für Plattformen genutzt.",
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "openFile": "Datei öffnen",
+    "delete": "Löschen",
+    "keep": "Behalten",
+    "deleteTitle": "Datei löschen?",
+    "deleteText": "Die Datei wird endgültig gelöscht.",
+    "deleteUsedText": "{count, plural, one {Die Datei wird auch aus # Beitrag entfernt und endgültig gelöscht.} other {Die Datei wird auch aus # Beiträgen entfernt und endgültig gelöscht.}}",
+    "deleted": "Datei gelöscht",
+    "wrongType": "Dateityp nicht unterstützt (erlaubt: JPG, PNG, WebP, GIF, SVG, MP4, MOV, WebM, PDF)",
+    "tooLarge": "Zu groß – Bilder höchstens 20 MB",
+    "tooLargeVideo": "Zu groß – Videos höchstens 50 MB",
+    "uploadFailed": "Hochladen fehlgeschlagen",
+    "uploaded": "{count, plural, one {# Datei hochgeladen} other {# Dateien hochgeladen}}",
+    "someFailed": "{count, plural, one {# Datei konnte nicht hochgeladen werden} other {# Dateien konnten nicht hochgeladen werden}}",
+    "postMedia": "Medien",
+    "fromLibrary": "Aus Mediathek wählen",
+    "unlink": "{name} entfernen",
+    "pickTitle": "Aus der Mediathek wählen",
+    "pickSubmit": "{count, plural, =0 {Hinzufügen} one {# Datei hinzufügen} other {# Dateien hinzufügen}}",
+    "cancel": "Abbrechen"
   }
 }
