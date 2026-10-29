@@ -61,7 +61,8 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 `/login` `/signup` `/forgot-password` `/set-password` `/auth/confirm` `/start` (Unternehmen wählen, Einladungen) `/organizations/new` `/invite/[token]` · App: `/o/[slug]/…` (Dashboard, calendar, campaigns, posts, approvals, reports, channels, settings/{company,team,account}), `/o/[slug]/onboarding`.
 
 ## Lokale Umgebung
-- Docker Desktop liegt unter `%LOCALAPPDATA%ProgramsDockerDesktopesourcesin` – in Shells ggf. zum PATH hinzufügen.
+- Starten für den Nutzer: Doppelklick auf `Taktwerk-starten.cmd` (startet Docker Desktop falls nötig, dann `supabase start`, dann `npm run dev`, öffnet den Browser). Docker startet nach einem Neustart nicht automatisch.
+- Docker-CLI liegt unter `%LOCALAPPDATA%/Programs/DockerDesktop/resources/bin` – in Shells ggf. zum PATH hinzufügen.
 - `.env.local` enthält die lokalen Supabase-Werte und ein Demo-Konto (`DEMO_EMAIL`/`DEMO_PASSWORD`). Mails lokal: http://127.0.0.1:54324, DB-Oberfläche: http://127.0.0.1:54323.
 
 ## Befehle
