@@ -74,7 +74,8 @@ docs/                   Entscheidungen, Schema
 ## Phasenplan
 - [ ] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✗ (URL fehlt), CLAUDE.md ✓, DB-Schema freigegeben ✓ (`docs/datenbankschema.md`)
 - [ ] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil
-- [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push, Asset-Bibliothek
+- [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push, Asset-Bibliothek, **Wochenplan** (s. u.)
+  - Wochenplan = Ansicht auf normale Beiträge (keine eigene Datenhaltung): Woche → Plattform → Tag → Beiträge, umschaltbar auf Tag → Plattformen; mehrere Beiträge je Tag/Plattform; Fortschritt je Plattform, Statuspunkt je Tag; Beitragsfelder interne Notizen + beliebig viele KI-Prompts (text/image/video/caption, Ergebnis, Reihenfolge; kopierbar, ausführbar, als Vorlage speicherbar); Wochenvorlagen + „Vorwoche kopieren“; Woche (eine/alle Plattformen) gesammelt zur Freigabe, owner gibt gesammelt oder einzeln frei; Beitrag auf andere Plattformen übertragen (KI-Anpassung in Phase 3)
 - [ ] **3 – KI-Assistent:** Ideen, Texte, Kanalanpassung, Kampagnenvorschläge
 - [ ] **4 – Messen & Steuern:** Offline-Maßnahmen (QR/Rabattcode), Budget, Kennzahlen manuell, Dashboard, Monatsbericht
 - [ ] **5 – Plattform-Anbindung:** Kanäle verbinden, automatisch veröffentlichen, Kennzahlen importieren

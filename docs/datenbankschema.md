@@ -44,6 +44,22 @@ Alle IDs `uuid` (`gen_random_uuid()`), Zeitstempel `timestamptz`, Geld in Cent (
 | `push_subscriptions` | id, user_id, endpoint, p256dh, auth, created_at | Ausnahme ohne org_id: gehört dem Gerät der Person |
 | `user_preferences` | user_id, organization_id, key, value jsonb | gemerkte Filter/Ansichten |
 
+### Ergänzung Wochenplan (Vorschlag, wartet auf Freigabe)
+Der Wochenplan ist nur eine Ansicht auf `posts` (Kanal + `planned_on`/`scheduled_at` + Status) – keine eigene Datenhaltung.
+
+| Änderung / Tabelle | Wichtige Spalten | Hinweis |
+|---|---|---|
+| `posts` + Spalten | internal_notes, planned_on (date) | `planned_on` = Tag im Wochenplan, auch ohne Uhrzeit; `scheduled_at` bleibt der genaue Termin |
+| Enum `ai_prompt_kind` | text, image, video, caption | |
+| `post_ai_prompts` | id, organization_id, post_id, kind, prompt, result, result_at, position, created_by | beliebig viele je Beitrag, sortierbar; Ergebnis wird gespeichert |
+| `prompt_templates` | id, organization_id, name, kind, prompt, created_by | Prompt-Vorlagen je Unternehmen |
+| `week_templates` | id, organization_id, name, is_default | feste Wochenstruktur je Unternehmen |
+| `week_template_slots` | id, organization_id, week_template_id, channel_id, weekday (1–7), time_of_day?, title, notes, prompts jsonb (kind, prompt), position | ein Eintrag = ein Beitrag, der beim Anwenden als `idea` angelegt wird |
+| `approval_requests` | id, organization_id, requested_by, week_start (date), channel_id? (leer = alle), message, status (open/closed), created_at | Sammel-Einreichung einer Woche |
+| `approval_request_posts` | approval_request_id, post_id, organization_id | owner gibt alle gesammelt oder einzeln frei (je Beitrag ein Eintrag in `approvals`) |
+
+Funktionen: `apply_week_template(org, template, week_start)`, `copy_week(org, from_week, to_week, channel?)` (kopiert als `idea`, ohne Ergebnisse/Kommentare), `submit_week_for_approval(org, week_start, channel?)`, `transfer_post(post, target_channels[])` (neue Beiträge in derselben `post_group`).
+
 ## Phase 3 – KI
 | Tabelle | Wichtige Spalten | Hinweis |
 |---|---|---|
