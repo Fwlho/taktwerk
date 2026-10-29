@@ -1,0 +1,324 @@
+{
+  "meta": {
+    "description": "Marketing-Portal für kleine Betriebe: planen, freigeben, veröffentlichen, auswerten."
+  },
+  "common": {
+    "optional": "optional",
+    "close": "Schließen"
+  },
+  "validation": {
+    "required": "Bitte ausfüllen.",
+    "email": "Bitte vollständige E-Mail-Adresse eingeben, z. B. name@betrieb.de.",
+    "passwordMin": "Bitte mindestens 10 Zeichen verwenden.",
+    "passwordMax": "Bitte höchstens 72 Zeichen verwenden.",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+    "nameMin": "Bitte mindestens 2 Zeichen eingeben.",
+    "tooLong": "Bitte kürzer fassen.",
+    "url": "Bitte eine Webadresse eingeben, z. B. malerei-krause.de."
+  },
+  "errors": {
+    "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal.",
+    "invalid": "Bitte prüf deine Eingaben.",
+    "forbidden": "Dafür fehlen dir die Rechte.",
+    "lastOwner": "Ein Unternehmen braucht mindestens einen Inhaber. Ernenne zuerst jemand anderen zum Inhaber.",
+    "alreadyInvited": "Diese Adresse ist bereits eingeladen.",
+    "emailMismatch": "Diese Einladung gilt für eine andere E-Mail-Adresse.",
+    "page": {
+      "title": "Diese Seite konnte nicht geladen werden",
+      "text": "Deine Daten sind sicher. Lade die Seite einfach neu.",
+      "retry": "Erneut laden"
+    },
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "text": "Den Link gibt es nicht oder du hast keinen Zugriff darauf.",
+      "home": "Zur Startseite"
+    }
+  },
+  "auth": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "fullName": "Dein Name",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort wiederholen",
+    "passwordHint": "Mindestens 10 Zeichen.",
+    "forgotPassword": "Passwort vergessen?",
+    "backToLogin": "Zurück zur Anmeldung",
+    "login": {
+      "title": "Anmelden",
+      "intro": "Schön, dass du da bist.",
+      "submit": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "toSignup": "Jetzt registrieren"
+    },
+    "signup": {
+      "title": "Konto anlegen",
+      "intro": "In wenigen Minuten startklar – kostenlos testen.",
+      "submit": "Konto anlegen",
+      "hasAccount": "Schon registriert?",
+      "toLogin": "Anmelden",
+      "privacy": "Wir speichern nur, was wir für dein Konto brauchen. Deine Daten liegen in Frankfurt.",
+      "checkEmailTitle": "Fast geschafft",
+      "checkEmailText": "Wir haben dir eine E-Mail an {email} geschickt. Klick auf den Link darin, um dein Konto zu bestätigen."
+    },
+    "forgot": {
+      "title": "Passwort vergessen",
+      "intro": "Gib deine E-Mail ein. Wir schicken dir einen Link für ein neues Passwort.",
+      "submit": "Link senden",
+      "sent": "Wenn ein Konto zu dieser Adresse existiert, ist der Link unterwegs. Schau auch im Spam-Ordner nach."
+    },
+    "setPassword": {
+      "title": "Neues Passwort",
+      "intro": "Wähl ein Passwort, das du sonst nirgends nutzt.",
+      "submit": "Passwort speichern"
+    },
+    "errors": {
+      "link": "Der Link ist abgelaufen oder wurde schon benutzt. Bitte fordere einen neuen an.",
+      "invalidCredentials": "E-Mail oder Passwort stimmen nicht.",
+      "emailNotConfirmed": "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer Mail.",
+      "emailTaken": "Zu dieser Adresse gibt es schon ein Konto. Melde dich an.",
+      "rateLimited": "Zu viele Versuche. Bitte warte kurz und versuch es dann erneut.",
+      "samePassword": "Das neue Passwort muss sich vom alten unterscheiden.",
+      "invalid": "Bitte prüf deine Eingaben.",
+      "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal."
+    }
+  },
+  "start": {
+    "metaTitle": "Start",
+    "title": "Hallo {name}",
+    "intro": "Wähl aus, woran du arbeiten möchtest.",
+    "invitations": "Offene Einladungen",
+    "invitedAs": "Du bist eingeladen als {role}",
+    "accept": "Annehmen",
+    "acceptFailed": "Die Einladung ist nicht mehr gültig.",
+    "organizations": "Deine Unternehmen",
+    "createOrganization": "Neues Unternehmen anlegen"
+  },
+  "organizations": {
+    "new": {
+      "title": "Dein Unternehmen",
+      "intro": "Wie heißt dein Betrieb? Den Namen kannst du später ändern.",
+      "name": "Name des Betriebs",
+      "namePlaceholder": "z. B. Malerei Krause",
+      "submit": "Weiter"
+    }
+  },
+  "invite": {
+    "metaTitle": "Einladung",
+    "title": "Du bist eingeladen",
+    "introLoggedIn": "Du bist angemeldet als {email}.",
+    "introLoggedOut": "Leg ein Konto an oder melde dich an, um die Einladung anzunehmen. Nutze dafür die E-Mail-Adresse, an die die Einladung ging.",
+    "signup": "Konto anlegen",
+    "login": "Anmelden",
+    "accept": "Einladung annehmen",
+    "switchAccount": "Mit anderem Konto anmelden",
+    "errors": {
+      "emailMismatch": "Diese Einladung gilt für eine andere E-Mail-Adresse. Melde dich mit dieser Adresse an.",
+      "invalid": "Die Einladung ist abgelaufen oder wurde schon angenommen. Bitte frag nach einer neuen."
+    }
+  },
+  "nav": {
+    "label": "Hauptnavigation",
+    "sectionCompany": "Unternehmen",
+    "pendingApprovals": "offene Freigaben",
+    "items": {
+      "dashboard": "Dashboard",
+      "calendar": "Kalender",
+      "campaigns": "Kampagnen",
+      "posts": "Beiträge",
+      "approvals": "Freigaben",
+      "reports": "Auswertung",
+      "channels": "Kanäle",
+      "settings": "Einstellungen"
+    },
+    "roles": {
+      "owner": "Inhaber",
+      "editor": "Ersteller",
+      "external": "Extern",
+      "viewer": "Betrachter"
+    },
+    "account": {
+      "open": "Kontomenü öffnen",
+      "account": "Konto & Darstellung",
+      "switchOrganization": "Unternehmen wechseln",
+      "signOut": "Abmelden"
+    },
+    "mobile": {
+      "home": "Start",
+      "create": "Neu",
+      "more": "Mehr",
+      "createTitle": "Neu anlegen",
+      "createSoon": "Kommt mit dem nächsten Update.",
+      "createOptions": {
+        "post": "Beitrag",
+        "idea": "Idee",
+        "campaign": "Kampagne"
+      }
+    }
+  },
+  "comingSoon": {
+    "title": "Hier entsteht gerade etwas",
+    "texts": {
+      "dashboard": "Bald siehst du hier, was heute dran ist.",
+      "calendar": "Bald planst du hier alle Beiträge im Monats- und Wochenblick.",
+      "campaigns": "Bald bündelst du hier Beiträge zu einem Ziel, z. B. „30 Anfragen im Frühjahr“.",
+      "posts": "Bald siehst du hier alle Beiträge von der Idee bis zur Veröffentlichung.",
+      "approvals": "Bald gibst du hier Beiträge mit einem Tipp frei.",
+      "reports": "Bald siehst du hier verständlich, was deine Beiträge gebracht haben.",
+      "channels": "Bald verbindest du hier Instagram, Facebook und weitere Kanäle.",
+      "settings": ""
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Guten Morgen, {name}",
+      "day": "Hallo, {name}",
+      "evening": "Guten Abend, {name}"
+    },
+    "intro": "Hier siehst du, was als Nächstes dran ist.",
+    "thisWeek": "Diese Woche",
+    "weekEmptyTitle": "Noch nichts geplant",
+    "weekEmptyText": "Sobald Beiträge geplant sind, erscheinen sie hier.",
+    "checklist": {
+      "title": "Erste Schritte",
+      "profile": "Unternehmensprofil ausfüllen",
+      "channels": "Kanäle verbinden",
+      "campaign": "Erste Kampagne anlegen",
+      "done": "erledigt",
+      "open": "offen",
+      "start": "Jetzt ausfüllen",
+      "soon": "Bald"
+    }
+  },
+  "onboarding": {
+    "title": "Einrichtung",
+    "asideTitle": "In 5 Minuten startklar",
+    "asideText": "Ein kurzer Schritt. Alles lässt sich später ändern.",
+    "steps": {
+      "company": "Dein Betrieb"
+    },
+    "trust": "Wir veröffentlichen nie etwas ohne deine Freigabe.",
+    "heading": "Erzähl uns von deinem Betrieb",
+    "subheading": "Damit der Assistent passende Ideen und Texte in deinem Ton vorschlägt."
+  },
+  "profile": {
+    "industry": "Branche",
+    "choose": "Bitte wählen",
+    "industries": {
+      "craft": "Handwerk",
+      "gastronomy": "Gastronomie",
+      "retail": "Einzelhandel",
+      "services": "Dienstleistung",
+      "health": "Gesundheit & Pflege",
+      "beauty": "Beauty & Wellness",
+      "other": "Sonstiges"
+    },
+    "location": "Ort",
+    "locationPlaceholder": "z. B. Berlin-Steglitz",
+    "radius": "Umkreis",
+    "radiusValue": "{km} km",
+    "website": "Webseite",
+    "websitePlaceholder": "z. B. malerei-krause.de",
+    "audiences": "Wen möchtest du erreichen?",
+    "audienceOptions": {
+      "private": "Privatkunden",
+      "business": "Gewerbe",
+      "property": "Hausverwaltungen",
+      "applicants": "Bewerber/innen",
+      "tourists": "Gäste & Touristen",
+      "regulars": "Stammkunden"
+    },
+    "voice": "Wie sprecht ihr mit Kunden?",
+    "voices": {
+      "du_casual": "Per Du, locker",
+      "sie_friendly": "Per Sie, freundlich",
+      "sie_formal": "Per Sie, sachlich"
+    },
+    "services": "Eure Leistungen",
+    "servicesHint": "Mit Komma trennen. Der Assistent nutzt sie für Ideen.",
+    "servicesPlaceholder": "z. B. Fassadenanstrich, Tapezieren, Bodenbeläge",
+    "later": "Später ausfüllen",
+    "finish": "Fertig",
+    "save": "Speichern",
+    "saved": "Profil gespeichert",
+    "savedOnboarding": "Alles eingerichtet – willkommen bei Taktwerk"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "tabs": {
+      "label": "Bereiche der Einstellungen",
+      "company": "Unternehmen",
+      "team": "Team",
+      "account": "Konto"
+    },
+    "company": {
+      "nameTitle": "Name",
+      "name": "Name des Betriebs",
+      "save": "Speichern",
+      "renamed": "Name gespeichert",
+      "profileTitle": "Unternehmensprofil",
+      "profileIntro": "Grundlage für die Vorschläge des Assistenten."
+    },
+    "team": {
+      "membersTitle": "{count, plural, one {# Person} other {# Personen}}",
+      "rolesIntro": "Inhaber geben frei, Ersteller schreiben Beiträge, Externe sehen nur ihre Beiträge, Betrachter lesen nur.",
+      "unnamed": "Ohne Namen",
+      "you": "du",
+      "roleFor": "Rolle von {name}",
+      "roleChanged": "{name} ist jetzt {role}",
+      "roleDescriptions": {
+        "owner": "Inhaber – darf alles und gibt frei",
+        "editor": "Ersteller – erstellt Beiträge und reicht sie ein",
+        "external": "Extern – sieht nur zugewiesene Beiträge",
+        "viewer": "Betrachter – darf nur lesen"
+      },
+      "leave": "Unternehmen verlassen",
+      "removeFor": "{name} entfernen",
+      "leaveTitle": "Unternehmen verlassen?",
+      "removeTitle": "{name} entfernen?",
+      "leaveText": "Du verlierst den Zugriff auf alle Beiträge und Kampagnen dieses Unternehmens. Ein Inhaber kann dich wieder einladen.",
+      "removeText": "{name} verliert sofort den Zugriff. Beiträge und Kommentare bleiben erhalten.",
+      "keep": "Behalten",
+      "leaveConfirm": "Verlassen",
+      "removeConfirm": "Entfernen",
+      "removed": "{name} wurde entfernt",
+      "invitationsTitle": "Offene Einladungen",
+      "noInvitations": "Keine offenen Einladungen",
+      "expires": "gültig bis {date}",
+      "expired": "abgelaufen",
+      "revoke": "Zurückziehen",
+      "revoked": "Einladung zurückgezogen"
+    },
+    "invite": {
+      "open": "Person einladen",
+      "title": "Person einladen",
+      "subtitle": "Die Einladung ist 7 Tage gültig.",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "cancel": "Abbrechen",
+      "submit": "Einladung senden",
+      "doneTitle": "Einladung erstellt",
+      "emailSent": "Wir haben eine E-Mail mit dem Einladungslink verschickt.",
+      "emailNotSent": "Diese Person hat schon ein Konto. Sie sieht die Einladung nach der Anmeldung – oder du schickst ihr den Link.",
+      "linkLabel": "Einladungslink",
+      "linkHint": "Der Link funktioniert nur mit der eingeladenen E-Mail-Adresse.",
+      "copy": "Link kopieren",
+      "copied": "Link kopiert",
+      "copyFailed": "Kopieren nicht möglich – bitte Link markieren und kopieren.",
+      "finish": "Fertig"
+    }
+  },
+  "account": {
+    "profileTitle": "Dein Profil",
+    "emailInfo": "Angemeldet mit {email}",
+    "fullName": "Dein Name",
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "appearanceTitle": "Darstellung",
+    "theme": {
+      "label": "Farbmodus",
+      "system": "Wie Gerät",
+      "light": "Hell",
+      "dark": "Dunkel"
+    }
+  }
+}
