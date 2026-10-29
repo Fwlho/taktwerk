@@ -42,13 +42,9 @@ exit /b 1
 :dbok
 echo        Datenbank laeuft.
 
-rem Schneller Betriebsmodus: App nur nach Updates neu bauen
-set "HEAD="
-set "BUILT="
-for /f %%i in ('git rev-parse HEAD 2^>nul') do set "HEAD=%%i"
-if exist ".next\build-commit.txt" set /p BUILT=<".next\build-commit.txt"
-if not exist ".next\BUILD_ID" goto build
-if not "%HEAD%"=="%BUILT%" goto build
+rem Schneller Betriebsmodus: App nur neu bauen, wenn sich Dateien seit dem letzten Bau geaendert haben
+powershell -NoProfile -Command "$b=(Get-Item '.next\BUILD_ID' -ErrorAction SilentlyContinue).LastWriteTime; $n=(Get-ChildItem src,messages,public,package.json,next.config.ts -Recurse -File -ErrorAction SilentlyContinue | Measure-Object LastWriteTime -Maximum).Maximum; if (-not $b -or $n -gt $b) { exit 1 } else { exit 0 }"
+if errorlevel 1 goto build
 goto run
 
 :build
@@ -60,7 +56,6 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
->".next\build-commit.txt" echo %HEAD%
 
 :run
 echo  [3/4] App starten ...
