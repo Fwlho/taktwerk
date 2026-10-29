@@ -1,0 +1,25 @@
+{
+ "v": 3,
+ "layout": "files",
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-10-29T15:43:32Z"
+ },
+ "title": "Taktwerk",
+ "namespace": "Taktwerk",
+ "libraries": [],
+ "sections": {},
+ "groups": [],
+ "assetGroups": {},
+ "blobs": {},
+ "docs": {
+  "readme": "project/README.md",
+  "sections": []
+ },
+ "lastChange": {
+  "by": "Florentin Hohenstein",
+  "at": "2026-10-29T15:43:32Z",
+  "via": "Claude (Cowork)",
+  "note": "Erstes Designkonzept: Tokens, 17 Komponenten, 11 Bildschirme, Übergabe"
+ }
+}

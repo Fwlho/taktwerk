@@ -1,0 +1,49 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Taktwerk</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--color-bg); color:var(--color-text); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; width:960px; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:496px; height:288px; }
+  .brand { fill:var(--color-primary); }
+  .accent { fill:var(--color-accent); }
+  .deep { fill:var(--color-text); }
+  .signal { fill:var(--color-status-review); }
+  .cut { fill:var(--color-bg); }
+  .acc { fill:var(--color-accent); }
+  .blk { rx:var(--radius-lg); }
+  .words { position:absolute; left:var(--space-8); bottom:var(--space-8); max-width:440px; }
+  .name { margin:0; font-family:var(--font-display); font-size:88px; line-height:.92; font-weight:700; letter-spacing:-0.03em; color:var(--color-text); }
+  .tag { margin:var(--space-3) 0 0 4px; font-size:14px; line-height:20px; color:var(--color-text-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 496 288" width="496" height="288">
+<!--
+  blocks      color-primary 160×256 slab bled off the top (the brand, largest) · color-accent 144×64 pill (the KI voice) · color-text 144×208 bleeding off the right edge (ink) · color-status-review 64×24 once (the one "act now" signal) – ≈30% of 960×288
+  arrangement one tall petrol slab with satellites, bottoms on one line at y=240 (space-12 above the edge), space-4 gutters
+  pattern     rhythm bars – literal motif from the name "Takt" and the logo's three bars: 12px-wide pills (rx = half = radius-sm) at a space-6 pitch, cut into the slab in color-bg and standing on the ink block in color-accent
+  scales      gutters space-4; pitch space-6; bar width space-3; corners radius-lg; pills rx half the short side (accent 32, bars 6, signal 12)
+-->
+<rect class="brand blk" x="16" y="-16" width="160" height="256" rx="16"/>
+<rect class="cut bar" x="36" y="184" width="12" height="40" rx="6"/><rect class="cut bar" x="60" y="136" width="12" height="88" rx="6"/><rect class="cut bar" x="84" y="168" width="12" height="56" rx="6"/><rect class="cut bar" x="108" y="104" width="12" height="120" rx="6"/><rect class="cut bar" x="132" y="152" width="12" height="72" rx="6"/><rect class="cut bar" x="156" y="120" width="12" height="104" rx="6"/>
+<rect class="accent" x="192" y="48" width="144" height="64" rx="32"/>
+<rect class="signal" x="192" y="216" width="64" height="24" rx="12"/>
+<rect class="deep blk" x="352" y="32" width="160" height="208" rx="16"/>
+<rect class="acc bar" x="372" y="160" width="12" height="64" rx="6"/><rect class="acc bar" x="396" y="112" width="12" height="112" rx="6"/><rect class="acc bar" x="420" y="176" width="12" height="48" rx="6"/><rect class="acc bar" x="444" y="136" width="12" height="88" rx="6"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Taktwerk</h1>
+<p class="tag">Marketing im Takt – auch ohne Marketingabteilung.</p>
+</div>
+</div>
+</body>
+</html>

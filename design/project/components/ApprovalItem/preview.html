@@ -1,0 +1,16 @@
+<!-- @dsCard group="Freigabe" height=600 width=1400 -->
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>ApprovalItem</title>
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div class="pv"><div class="pv-row">
+<div class="pv-col" style="width:420px"><span class="pv-lbl">Kommentare</span><div class="tw-comment"><span class="tw-avatar tw-avatar--lg tw-avatar--ext">LS</span><div class="tw-comment__body"><div class="tw-comment__head"><span class="tw-comment__name">Lena Sommer</span><span class="tw-comment__role">Extern · Agentur</span><span class="tw-comment__time">vor 2 Std.</span></div><p class="tw-comment__text">Habe den Text gekürzt und das Nachher-Bild nach vorne gezogen. Passt das so?</p></div></div><div class="tw-comment"><span class="tw-avatar tw-avatar--lg">MK</span><div class="tw-comment__body"><div class="tw-comment__head"><span class="tw-comment__name">Martin Krause</span><span class="tw-comment__role">Inhaber</span><span class="tw-comment__time">gerade eben</span></div><span class="tw-comment__quote">„Termine im April frei“</span><p class="tw-comment__text">Bitte „Mai“ statt „April“ – April ist schon voll.</p></div></div><span class="pv-lbl" style="margin-top:8px">Entscheidungen im Verlauf</span><div class="tw-decision tw-decision--approved"><i data-lucide="circle-check"></i>Freigegeben von Martin Krause · Di, 9:12</div><div class="tw-decision tw-decision--changes"><i data-lucide="rotate-ccw"></i>Änderung gewünscht von Martin Krause · Di, 9:14</div><span class="pv-lbl" style="margin-top:8px">Eingabe</span><div class="tw-composer" style="width:380px"><div class="tw-input"><span class="ph">Kommentar schreiben … @ erwähnt jemanden</span></div><button class="tw-btn tw-btn--primary tw-btn--icon" aria-label="Senden"><i data-lucide="send"></i></button></div></div>
+<div class="pv-col"><span class="pv-lbl">Freigabe-Block (wartet auf Inhaber)</span><div class="tw-approval tw-approval--pending" style="width:380px"><div class="tw-card__row"><span class="tw-status tw-status--review "><i data-lucide="hourglass"></i>Zur Freigabe</span><span class="t-small t-muted" style="margin-left:auto">angefragt von Lena Sommer</span></div><div class="tw-field"><label class="tw-field__label">Kommentar <span class="opt">(optional)</span></label><div class="tw-input"><span class="ph">Kurze Rückmeldung …</span></div></div><div class="tw-approval__actions"><button class="tw-btn tw-btn--lg"><i data-lucide="rotate-ccw"></i>Ändern</button><button class="tw-btn tw-btn--primary tw-btn--lg"><i data-lucide="check"></i>Freigeben</button></div></div><span class="pv-lbl" style="margin-top:8px">Laden (Freigabe wird gesendet)</span><div class="tw-approval__actions" style="width:380px"><button class="tw-btn tw-btn--lg" disabled>Ändern</button><button class="tw-btn tw-btn--primary tw-btn--lg is-loading">Freigeben</button></div><span class="pv-lbl" style="margin-top:8px">Fehler (offline)</span><div class="tw-banner tw-banner--error" style="width:380px"><i data-lucide="wifi-off"></i>Keine Verbindung – Freigabe wird gesendet, sobald du online bist.</div></div>
+</div></div>
+<script>window.lucide && lucide.createIcons();</script>
+</body>
+</html>

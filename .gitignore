@@ -1,0 +1,24 @@
+# Abhängigkeiten / Build
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Umgebungsvariablen – niemals einchecken
+.env
+.env.*
+!.env.example
+
+# Supabase lokal
+supabase/.branches/
+supabase/.temp/
+
+# System / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
