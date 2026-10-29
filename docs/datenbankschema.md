@@ -44,7 +44,7 @@ Alle IDs `uuid` (`gen_random_uuid()`), Zeitstempel `timestamptz`, Geld in Cent (
 | `push_subscriptions` | id, user_id, endpoint, p256dh, auth, created_at | Ausnahme ohne org_id: gehört dem Gerät der Person |
 | `user_preferences` | user_id, organization_id, key, value jsonb | gemerkte Filter/Ansichten |
 
-### Ergänzung Wochenplan (Vorschlag, wartet auf Freigabe)
+### Ergänzung Wochenplan (freigegeben 2026-10-29; Bild/Video-Prompts nur speichern+kopieren, Design-Entwurf vor Phase 2)
 Der Wochenplan ist nur eine Ansicht auf `posts` (Kanal + `planned_on`/`scheduled_at` + Status) – keine eigene Datenhaltung.
 
 | Änderung / Tabelle | Wichtige Spalten | Hinweis |
