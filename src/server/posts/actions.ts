@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { POST_STATUSES } from "@/lib/domain";
-import { todayBerlin } from "@/lib/format";
+import { berlinLocalToIso, todayBerlin } from "@/lib/format";
 import { newPostSchema, postContentSchema, type NewPostFormValues, type PostContentInput } from "@/lib/validation";
 import { getOrgContext, requirePermission } from "@/server/auth/session";
 import { createSupabaseServerClient } from "@/server/db/supabase";
@@ -30,6 +30,7 @@ export async function createPost(slug: string, input: NewPostFormValues): Promis
         campaign_id: v.campaignId,
         title: v.title,
         planned_on: v.plannedOn,
+        scheduled_at: v.plannedOn && v.time ? berlinLocalToIso(v.plannedOn, v.time) : null,
         status: v.status,
       })
       .select("id")

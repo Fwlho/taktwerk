@@ -123,6 +123,10 @@ export const newPostSchema = z.object({
   title: z.string().trim().min(1, "required").max(200, "tooLong"),
   campaignId: z.union([z.literal(""), z.uuid()]).transform((v) => (v === "" ? null : v)),
   plannedOn: z.union([z.literal(""), dateOnly]).transform((v) => (v === "" ? null : v)),
+  time: z
+    .union([z.literal(""), z.string().regex(/^\d{2}:\d{2}$/)])
+    .optional()
+    .transform((v) => (v ? v : null)),
   status: z.enum(["idea", "draft"]),
 });
 export type NewPostFormValues = z.input<typeof newPostSchema>;

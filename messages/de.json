@@ -18,7 +18,8 @@
     "date": "Bitte ein Datum wählen.",
     "wholeNumber": "Bitte eine ganze Zahl eingeben, z. B. 30.",
     "euro": "Bitte einen Betrag eingeben, z. B. 1.200 oder 1.200,50.",
-    "endBeforeStart": "Das Ende liegt vor dem Start."
+    "endBeforeStart": "Das Ende liegt vor dem Start.",
+    "time": "Bitte eine Uhrzeit wählen, z. B. 09:00."
   },
   "errors": {
     "generic": "Das hat nicht geklappt. Bitte versuch es noch einmal.",
@@ -364,7 +365,8 @@
       "stageDraft": "Entwurf",
       "cancel": "Abbrechen",
       "submit": "Beitrag anlegen",
-      "noChannels": "Leg zuerst unter „Kanäle“ einen Kanal an."
+      "noChannels": "Leg zuerst unter „Kanäle“ einen Kanal an.",
+      "time": "Uhrzeit"
     },
     "filters": {
       "search": "Beiträge suchen",
@@ -717,5 +719,40 @@
     "offline": "Keine Verbindung – bitte gleich noch einmal versuchen.",
     "offlineQueued": "Keine Verbindung – deine Entscheidung wird gesendet, sobald du online bist.",
     "queueSent": "Gespeicherte Entscheidungen wurden gesendet."
+  },
+  "calendar": {
+    "title": "Redaktionskalender",
+    "viewLabel": "Ansicht",
+    "views": {
+      "month": "Monat",
+      "week": "Woche",
+      "list": "Liste"
+    },
+    "newPost": "Beitrag anlegen",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "today": "Heute",
+    "filter": "Kanäle filtern",
+    "legend": "Status",
+    "weekTitle": "KW {week} · {range}",
+    "dropHere": "Hier ablegen",
+    "addOn": "Beitrag am {day} anlegen",
+    "addAt": "Beitrag um {time} anlegen",
+    "more": "+{count} weitere",
+    "allDay": "Ganztägig",
+    "emptyTitle": "In diesem Zeitraum ist nichts geplant",
+    "emptyText": "Leg einen Beitrag an oder zieh Ideen aus der Pipeline in den Kalender.",
+    "nothingThatDay": "An diesem Tag ist nichts geplant.",
+    "dayWithCount": "{day}, {count, plural, =0 {keine Beiträge} one {# Beitrag} other {# Beiträge}}",
+    "moved": "Verschoben auf {day}",
+    "undo": "Rückgängig",
+    "scheduledNeedsTime": "Geplante Beiträge brauchen eine Uhrzeit in der Zukunft.",
+    "failed": "Fehlgeschlagen",
+    "dragInstructions": "Leertaste zum Anheben, Pfeiltasten zum Verschieben, Leertaste zum Ablegen, Esc zum Abbrechen.",
+    "dragStart": "Beitrag angehoben.",
+    "dragOver": "Über einem neuen Termin.",
+    "dragNone": "Über keinem Termin.",
+    "dragEnd": "Beitrag verschoben.",
+    "dragCancel": "Verschieben abgebrochen."
   }
 }

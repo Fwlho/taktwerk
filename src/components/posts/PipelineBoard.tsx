@@ -240,6 +240,7 @@ export function PipelineBoard({
 
           {/* Desktop/Tablet: Kanban */}
           <DndContext
+            id="pipeline-dnd"
             sensors={sensors}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}

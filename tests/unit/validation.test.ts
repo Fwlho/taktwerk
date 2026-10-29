@@ -88,3 +88,13 @@ describe("Formulare", () => {
     expect(columnsToVoice("sie", "unbekannt")).toBe("sie_friendly");
   });
 });
+
+describe("Neuer Beitrag", () => {
+  it("akzeptiert Tag + Uhrzeit, lehnt kaputte Uhrzeit ab", async () => {
+    const { newPostSchema } = await import("@/lib/validation");
+    const base = { title: "X", channelId: "735c15f6-0655-494d-8cea-d386f2630a26", campaignId: "", plannedOn: "2026-11-04", status: "draft" as const };
+    expect(newPostSchema.safeParse({ ...base, time: "09:00" }).success).toBe(true);
+    expect(newPostSchema.safeParse({ ...base, time: "" }).success).toBe(true);
+    expect(newPostSchema.safeParse({ ...base, time: "9 Uhr" }).success).toBe(false);
+  });
+});
