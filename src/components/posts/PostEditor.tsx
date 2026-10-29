@@ -206,13 +206,14 @@ export function PostEditor({
     fn();
   }
 
-  function approve(note?: string) {
+  function approve(note?: string, thenSchedule = false) {
     void flushThen(() =>
       startTransition(async () => {
         const res = await transitionPost(slug, post.id, "approved", note);
         if (res.error) return toast({ kind: "error", title: te(res.error) });
         setStatus("approved");
         version.current = res.data!.version;
+        if (thenSchedule) transition.openSchedule({ ...getTarget(), status: "approved", version: res.data!.version });
         toast({
           kind: "success",
           title: t("approved"),
@@ -238,6 +239,7 @@ export function PostEditor({
   function runAction(kind: ActionKind) {
     switch (kind) {
       case "approveAndSchedule":
+        return approve(undefined, true);
       case "approve":
         return approve();
       case "submit":
