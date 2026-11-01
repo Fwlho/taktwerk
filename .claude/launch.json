@@ -6,6 +6,13 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "taktwerk-ki-test",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
+      "env": { "AI_FAKE": "1" },
+      "port": 3000
     }
   ]
 }

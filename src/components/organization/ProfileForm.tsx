@@ -59,8 +59,8 @@ export function ProfileForm({ slug, mode, defaults, readOnly }: Props) {
         return;
       }
       if (mode === "onboarding") {
-        toast({ kind: "success", title: t("savedOnboarding") });
-        router.push(`/o/${slug}`);
+        // weiter zu Schritt 2 (Kanäle)
+        router.push(`/o/${slug}/onboarding?step=channels`);
       } else {
         toast({ kind: "success", title: t("saved") });
         form.reset(form.getValues());

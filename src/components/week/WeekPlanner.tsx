@@ -25,6 +25,7 @@ import { approveWeek, copyPreviousWeek, submitWeek } from "@/server/week/actions
 import type { WeekData, WeekPost } from "@/server/week/queries";
 import type { ChannelOption } from "@/components/campaigns/CampaignFormModal";
 import type { MemberInfo } from "@/components/posts/PostCard";
+import { IdeasModal } from "@/components/ai/IdeasModal";
 import { WeekTemplatesModal } from "./WeekTemplatesModal";
 
 export type WeekView = "platform" | "day";
@@ -157,6 +158,7 @@ export function WeekPlanner({
   const [submitFor, setSubmitFor] = useState<{ channelId?: string } | null>(null);
   const [message, setMessage] = useState("");
   const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [ideasOpen, setIdeasOpen] = useState(false);
   const today = todayBerlin();
   const canPlan = role === "owner" || role === "editor";
   const canSubmit = role !== "viewer";
@@ -232,6 +234,9 @@ export function WeekPlanner({
                 </Button>
                 <Button icon={<LayoutTemplate aria-hidden />} onClick={() => setTemplatesOpen(true)}>
                   {t("templates")}
+                </Button>
+                <Button variant="ai" icon={<Sparkles aria-hidden />} onClick={() => setIdeasOpen(true)}>
+                  {t("suggestIdeas")}
                 </Button>
               </>
             )}
@@ -465,6 +470,17 @@ export function WeekPlanner({
       </Modal>
 
       {canPlan && <WeekTemplatesModal slug={slug} open={templatesOpen} onClose={() => setTemplatesOpen(false)} weekStart={weekStart} weekHasPosts={data.posts.length > 0} />}
+      {canPlan && (
+        <IdeasModal
+          slug={slug}
+          open={ideasOpen}
+          onClose={() => setIdeasOpen(false)}
+          channels={channels}
+          subtitle={t("ideasSubtitle")}
+          // Mo, Mi, Fr, Di, Do, Sa, So
+          plannedOn={(i) => addDays(weekStart, [0, 2, 4, 1, 3, 5, 6][i % 7]!)}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { CampaignsView } from "@/components/campaigns/CampaignsView";
 import { can } from "@/lib/permissions";
 import { requireNavAccess } from "@/server/auth/nav-access";
+import { aiConfigured } from "@/server/ai/client";
 import { listCampaigns } from "@/server/campaigns/queries";
 import { listChannels } from "@/server/channels/queries";
 
@@ -20,6 +21,7 @@ export default async function CampaignsPage({ params }: { params: Promise<{ slug
       campaigns={campaigns}
       channels={channels.map((c) => ({ id: c.id, type: c.type, name: c.name }))}
       canCreate={can(role, "campaigns.create")}
+      aiConfigured={aiConfigured()}
     />
   );
 }

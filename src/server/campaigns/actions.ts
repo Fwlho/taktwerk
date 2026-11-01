@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { z } from "zod";
+import { CAMPAIGN_GOALS, CHANNEL_TYPES } from "@/lib/domain";
+import { can } from "@/lib/permissions";
 import { campaignSchema, type CampaignFormValues } from "@/lib/validation";
 import { requirePermission } from "@/server/auth/session";
 import { createSupabaseServerClient } from "@/server/db/supabase";
@@ -105,5 +109,97 @@ export async function deleteCampaign(slug: string, id: string): Promise<ActionRe
     if (!count) return { error: "gone" };
     revalidatePath(`/o/${slug}/campaigns`);
     redirect(`/o/${slug}/campaigns`);
+  });
+}
+
+const planSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  goal: z.enum(CAMPAIGN_GOALS),
+  goalDescription: z.string().max(500),
+  durationWeeks: z.number().int().min(1).max(12),
+  channels: z.array(z.enum(CHANNEL_TYPES)).max(6),
+  ideas: z
+    .array(z.object({ title: z.string().trim().min(1).max(200), body: z.string().max(5000), channel: z.enum(CHANNEL_TYPES), week: z.number().int().min(1).max(12) }))
+    .max(10),
+});
+export type CampaignPlanInput = z.infer<typeof planSchema>;
+
+const addDays = (iso: string, days: number) => {
+  const d = new Date(`${iso}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+};
+
+/**
+ * Kampagnenvorschlag übernehmen: Kampagne + Kanäle + Beitragsideen.
+ * Fehlende Kanäle legt nur der Inhaber an; sonst wird ein vorhandener Kanal verwendet.
+ */
+export async function applyCampaignPlan(slug: string, input: CampaignPlanInput, startDate: string): Promise<ActionResult<{ id: string; posts: number }>> {
+  return guard(async () => {
+    const parsed = planSchema.safeParse(input);
+    const start = z.iso.date().safeParse(startDate);
+    if (!parsed.success || !start.success) return { error: "invalid" };
+    const plan = parsed.data;
+    const { organization, role } = await requirePermission(slug, "campaigns.create");
+    const supabase = await createSupabaseServerClient();
+
+    const { data: existing } = await supabase.from("channels").select("id, type").eq("organization_id", organization.id);
+    const byType = new Map((existing ?? []).map((c) => [c.type, c.id]));
+    const wanted = [...new Set([...plan.channels, ...plan.ideas.map((i) => i.channel)])];
+    const missing = wanted.filter((t) => !byType.has(t));
+    if (missing.length && can(role, "channels.manage")) {
+      const tc = await getTranslations("channels.types");
+      const { data: created } = await supabase
+        .from("channels")
+        .insert(missing.map((type) => ({ organization_id: organization.id, type, name: tc(type) })))
+        .select("id, type");
+      for (const c of created ?? []) byType.set(c.type, c.id);
+    }
+    const fallbackChannel = [...byType.values()][0];
+
+    const { data: campaign, error } = await supabase
+      .from("campaigns")
+      .insert({
+        organization_id: organization.id,
+        name: plan.name,
+        goal: plan.goal,
+        goal_description: plan.goalDescription || null,
+        start_date: start.data,
+        end_date: addDays(start.data, plan.durationWeeks * 7 - 1),
+        status: "draft",
+      })
+      .select("id")
+      .single();
+    if (error) return { error: dbError(error) };
+
+    const channelIds = [...new Set(plan.channels.flatMap((t) => (byType.get(t) ? [byType.get(t)!] : [])))];
+    const channelError = await syncChannels(supabase, organization.id, campaign.id, channelIds);
+    if (channelError) return { error: dbError(channelError) };
+
+    // Ideen innerhalb ihrer Woche verteilen (Di, Do, Sa …)
+    const perWeek = new Map<number, number>();
+    const rows = plan.ideas.flatMap((idea) => {
+      const channelId = byType.get(idea.channel) ?? fallbackChannel;
+      if (!channelId) return [];
+      const n = perWeek.get(idea.week) ?? 0;
+      perWeek.set(idea.week, n + 1);
+      return [
+        {
+          organization_id: organization.id,
+          channel_id: channelId,
+          campaign_id: campaign.id,
+          title: idea.title,
+          body: idea.body,
+          planned_on: addDays(start.data, (idea.week - 1) * 7 + Math.min(6, 1 + n * 2)),
+          status: "idea" as const,
+        },
+      ];
+    });
+    if (rows.length) {
+      const { error: pErr } = await supabase.from("posts").insert(rows);
+      if (pErr) return { error: dbError(pErr) };
+    }
+    revalidatePath(`/o/${slug}`, "layout");
+    return { ok: true, data: { id: campaign.id, posts: rows.length } };
   });
 }

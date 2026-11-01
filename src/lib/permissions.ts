@@ -22,6 +22,7 @@ const PERMISSIONS = {
   "posts.assign": ["owner", "editor"],
   "posts.approve": ["owner"],
   "posts.schedule": ["owner", "editor"],
+  "ai.use": ["owner", "editor", "external"],
 } as const satisfies Record<string, readonly MemberRole[]>;
 
 export type Permission = keyof typeof PERMISSIONS;

@@ -43,7 +43,7 @@ export function PostMedia({
 
   return (
     <section aria-labelledby="media-h" className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="media-h" className="text-label">
           {t("postMedia")}
         </h2>

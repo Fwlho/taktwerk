@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { DashboardView } from "@/components/dashboard/DashboardView";
 import { can } from "@/lib/permissions";
 import { requireNavAccess } from "@/server/auth/nav-access";
+import { aiConfigured } from "@/server/ai/client";
 import { listCampaigns } from "@/server/campaigns/queries";
 import { listChannels } from "@/server/channels/queries";
 import { getDashboardData } from "@/server/dashboard/queries";
@@ -31,6 +32,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ slug
       firstName={user.fullName.split(" ")[0] ?? ""}
       organizationName={organization.name}
       data={data}
+      channels={channels.map((c) => ({ id: c.id, type: c.type }))}
+      aiConfigured={aiConfigured()}
       members={members.map((m) => ({ userId: m.userId, fullName: m.fullName, role: m.role }))}
       checklist={[
         { key: "profile", done: Boolean(profile?.onboarding_completed_at), href: can(role, "profile.update") ? `${base}/onboarding` : null },

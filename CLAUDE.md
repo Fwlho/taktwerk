@@ -55,10 +55,17 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 - Statuswerte (DB) → Label: `idea` Idee · `draft` Entwurf · `in_review` Zur Freigabe · `changes_requested` Änderung gewünscht (Amber, `rotate-ccw`) · `approved` Freigegeben · `scheduled` Geplant · `published` Veröffentlicht · `evaluated` Ausgewertet. Design-Tokens `status-review`/`status-analyzed` werden für `in_review`/`evaluated` verwendet.
 - Rolle `editor` = „Ersteller“ im Design. `external` sieht nur Beiträge, denen er zugewiesen ist.
 - Ansprache: Voreinstellungen `du_casual` / `sie_friendly` / `sie_formal` → Spalten `address_form` + `tone`.
-- Bewusste Abweichungen Phase 1: Onboarding nur Schritt 1 (Kanäle/Ziel folgen Phase 2/3); Feld „Leistungen“ ergänzt (fehlt im Entwurf, laut Produktvorgabe nötig); Webseite wird noch nicht ausgelesen (Phase 3).
+- Bewusste Abweichungen: Feld „Leistungen“ ergänzt (fehlt im Entwurf, laut Produktvorgabe nötig); Webseite wird noch nicht ausgelesen (Entscheidung Phase 3: später); Onboarding Schritt 2 wählt Kanäle nur aus (Verbinden folgt Phase 5); Editor mobil mit 4 Tabs (Text · Assistent · Vorschau · Verlauf), damit der Verlauf erreichbar bleibt.
 
 ## Routen
 `/login` `/signup` `/forgot-password` `/set-password` `/auth/confirm` `/start` (Unternehmen wählen, Einladungen) `/organizations/new` `/invite/[token]` · App: `/o/[slug]/…` (Dashboard, calendar, campaigns, posts, approvals, reports, channels, settings/{company,team,account}), `/o/[slug]/onboarding`.
+
+## KI
+- `@anthropic-ai/sdk`, Modell aus `ANTHROPIC_MODEL` (Standard `claude-opus-5-5`, freigegeben), Schlüssel `ANTHROPIC_API_KEY`. Ohne Schlüssel: KI-Knöpfe zeigen „nicht eingerichtet“, Kampagnen kommen aus Branchenvorlagen.
+- Aufbau `src/server/ai/`: `client.ts` (Modell, Fehler), `generate.ts` (Stream/Text/JSON, Ersatzmodell bei Ablehnung über `fallbacks: "default"`), `prompts.ts` (Anweisungen, Nutzereingaben in Tags), `service.ts` (Aufgaben), `usage.ts` (Protokoll), `actions.ts` (Server Actions). Editor-Text streamt über Route `/o/[slug]/ai/text`.
+- Kostenbremse: `organizations.ai_daily_limit` (100/Tag); jede Anfrage über `begin_ai_request` (prüft Rolle + Limit), Verbrauch ohne Texte in `ai_requests`.
+- Tests ohne Kosten: `AI_FAKE=1` (Playwright setzt es selbst) liefert feste Beispieltexte. Echte KI nie in Tests.
+- Datenschutz: Beitragstexte und Unternehmensprofil gehen zur Verarbeitung an Anthropic (USA) → in den Datenschutzhinweis aufnehmen.
 
 ## Push
 - VAPID-Schlüssel in `.env.local` (`NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). Versand nach Server Actions per `after(() => sendPendingPushes(orgId))`; Benachrichtigungen selbst erzeugen DB-Trigger/`transition_post_status`.
@@ -99,7 +106,7 @@ docs/                   Entscheidungen, Schema
 - [x] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil ✓ (35 DB-, 17 Unit-, 8 Browser-Tests grün)
 - [x] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push ✓, Asset-Bibliothek ✓, Kanäle/Kampagnen/Beiträge/Kanban/Kalender/Freigabe ✓, **Wochenplan** ✓ (ohne Design-Entwurf aus vorhandenen Komponenten gebaut; Funktionen `copy_week`, `save_week_as_template`, `apply_week_template`, `submit_week_for_approval`, `approve_week`)
   - Wochenplan = Ansicht auf normale Beiträge (keine eigene Datenhaltung): Woche → Plattform → Tag → Beiträge, umschaltbar auf Tag → Plattformen; mehrere Beiträge je Tag/Plattform; Fortschritt je Plattform, Statuspunkt je Tag; Beitragsfelder interne Notizen + beliebig viele KI-Prompts (text/image/video/caption, Ergebnis, Reihenfolge; kopierbar, ausführbar, als Vorlage speicherbar); Wochenvorlagen + „Vorwoche kopieren“; Woche (eine/alle Plattformen) gesammelt zur Freigabe, owner gibt gesammelt oder einzeln frei; Beitrag auf andere Plattformen übertragen (KI-Anpassung in Phase 3)
-- [ ] **3 – KI-Assistent:** Ideen, Texte, Kanalanpassung, Kampagnenvorschläge
+- [x] **3 – KI-Assistent:** Assistent im Editor (schreiben, Schnellbefehle, Kanal-Anpassung, Übernehmen/Rückgängig), Prompts ausführen, Übertragen mit KI-Anpassung, Ideen (Übersicht, Kanban, Wochenplan), Kampagnenvorschläge aus 28 Branchenvorlagen, Onboarding Schritt 2 (Kanäle) + 3 (erstes Ziel → Kampagne mit 4 Ideen), Tageslimit ✓ (129 DB-, 51 Unit-, 12 Browser-Tests grün)
 - [ ] **4 – Messen & Steuern:** Offline-Maßnahmen (QR/Rabattcode), Budget, Kennzahlen manuell, Dashboard, Monatsbericht
 - [ ] **5 – Plattform-Anbindung:** Kanäle verbinden, automatisch veröffentlichen, Kennzahlen importieren
 - [ ] **6 – Abrechnung/Abo** (später)

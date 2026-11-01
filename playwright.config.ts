@@ -28,6 +28,8 @@ export default defineConfig({
     command: "npm run build && npm run start",
     url: "http://localhost:3000/login",
     reuseExistingServer: true,
+    // KI im Testbetrieb: feste Beispieltexte, keine Kosten
+    env: { AI_FAKE: "1" },
     timeout: 420_000,
   },
 });

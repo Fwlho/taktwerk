@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -9,6 +9,7 @@ import { cx } from "@/lib/cx";
 import { CAMPAIGN_STATUSES, type CampaignStatus } from "@/lib/domain";
 import type { CampaignListItem } from "@/server/campaigns/queries";
 import { CampaignCard } from "./CampaignCard";
+import { CampaignSuggestModal } from "@/components/ai/CampaignSuggestModal";
 import { CampaignFormModal, type ChannelOption } from "./CampaignFormModal";
 
 type Sort = "newest" | "start" | "name";
@@ -18,11 +19,13 @@ export function CampaignsView({
   campaigns,
   channels,
   canCreate,
+  aiConfigured,
 }: {
   slug: string;
   campaigns: CampaignListItem[];
   channels: ChannelOption[];
   canCreate: boolean;
+  aiConfigured: boolean;
 }) {
   const t = useTranslations("campaigns");
   const ts = useTranslations("campaigns.status");
@@ -30,6 +33,7 @@ export function CampaignsView({
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("newest");
   const [creating, setCreating] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: campaigns.length };
@@ -59,9 +63,14 @@ export function CampaignsView({
           {campaigns.length > 0 && <p className="text-body text-text-muted">{t("summary", { count: campaigns.length, running })}</p>}
         </div>
         {canCreate && (
-          <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating(true)}>
-            {t("new")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="ai" icon={<Sparkles aria-hidden />} onClick={() => setSuggesting(true)}>
+              {t("suggest")}
+            </Button>
+            <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating(true)}>
+              {t("new")}
+            </Button>
+          </div>
         )}
       </header>
 
@@ -73,9 +82,14 @@ export function CampaignsView({
             text={t("emptyText")}
             actions={
               canCreate && (
-                <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating(true)}>
-                  {t("new")}
-                </Button>
+                <>
+                  <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating(true)}>
+                    {t("new")}
+                  </Button>
+                  <Button variant="ai" icon={<Sparkles aria-hidden />} onClick={() => setSuggesting(true)}>
+                    {t("suggest")}
+                  </Button>
+                </>
               )
             }
           />
@@ -169,6 +183,7 @@ export function CampaignsView({
       )}
 
       {canCreate && <CampaignFormModal slug={slug} open={creating} onClose={() => setCreating(false)} channels={channels} />}
+      {canCreate && <CampaignSuggestModal slug={slug} open={suggesting} onClose={() => setSuggesting(false)} configured={aiConfigured} />}
     </>
   );
 }

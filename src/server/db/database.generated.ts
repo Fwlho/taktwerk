@@ -54,6 +54,51 @@ export type Database = {
           },
         ];
       };
+      ai_requests: {
+        Row: {
+          created_at: string;
+          finished_at: string | null;
+          id: string;
+          input_tokens: number;
+          kind: Database["public"]["Enums"]["ai_request_kind"];
+          model: string | null;
+          organization_id: string;
+          output_tokens: number;
+          user_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          finished_at?: string | null;
+          id?: string;
+          input_tokens?: number;
+          kind: Database["public"]["Enums"]["ai_request_kind"];
+          model?: string | null;
+          organization_id: string;
+          output_tokens?: number;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          finished_at?: string | null;
+          id?: string;
+          input_tokens?: number;
+          kind?: Database["public"]["Enums"]["ai_request_kind"];
+          model?: string | null;
+          organization_id?: string;
+          output_tokens?: number;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ai_requests_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       approval_request_posts: {
         Row: {
           approval_request_id: string;
@@ -463,6 +508,31 @@ export type Database = {
           },
         ];
       };
+      industry_templates: {
+        Row: {
+          content: NonNullable<Json>;
+          goal: Database["public"]["Enums"]["campaign_goal"];
+          id: string;
+          industry: string;
+          name: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          content: NonNullable<Json>;
+          goal: Database["public"]["Enums"]["campaign_goal"];
+          id?: string;
+          industry: string;
+          name: string;
+        };
+        Update: {
+          content?: NonNullable<Json>;
+          goal?: Database["public"]["Enums"]["campaign_goal"];
+          id?: string;
+          industry?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
       invitations: {
         Row: {
           accepted_at: string | null;
@@ -639,6 +709,7 @@ export type Database = {
       };
       organizations: {
         Row: {
+          ai_daily_limit: number;
           created_at: string;
           created_by: string | null;
           id: string;
@@ -648,6 +719,7 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          ai_daily_limit?: number;
           created_at?: string;
           created_by?: string | null;
           id?: string;
@@ -656,6 +728,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          ai_daily_limit?: number;
           created_at?: string;
           created_by?: string | null;
           id?: string;
@@ -1151,6 +1224,13 @@ export type Database = {
         Args: { p_invitation_id: string };
         Returns: string;
       };
+      ai_usage_today: {
+        Args: { p_org: string };
+        Returns: {
+          daily_limit: number;
+          used: number;
+        }[];
+      };
       apply_week_template: {
         Args: { p_template: string; p_week_start: string };
         Returns: number;
@@ -1158,6 +1238,13 @@ export type Database = {
       approve_week: {
         Args: { p_comment?: string; p_request: string };
         Returns: number;
+      };
+      begin_ai_request: {
+        Args: {
+          p_kind: Database["public"]["Enums"]["ai_request_kind"];
+          p_org: string;
+        };
+        Returns: string;
       };
       copy_week: {
         Args: {
@@ -1171,6 +1258,15 @@ export type Database = {
       create_organization: {
         Args: { p_name: string; p_slug: string };
         Returns: string;
+      };
+      finish_ai_request: {
+        Args: {
+          p_id: string;
+          p_input: number;
+          p_model: string;
+          p_output: number;
+        };
+        Returns: undefined;
       };
       my_pending_invitations: {
         Args: Record<PropertyKey, never>;
@@ -1271,6 +1367,7 @@ export type Database = {
     Enums: {
       address_form: "du" | "sie";
       ai_prompt_kind: "text" | "image" | "video" | "caption";
+      ai_request_kind: "text" | "adapt" | "prompt" | "ideas" | "campaign";
       approval_decision: "approved" | "changes_requested";
       asset_kind: "image" | "video" | "logo" | "document";
       campaign_goal:
@@ -1425,6 +1522,7 @@ export const Constants = {
     Enums: {
       address_form: ["du", "sie"],
       ai_prompt_kind: ["text", "image", "video", "caption"],
+      ai_request_kind: ["text", "adapt", "prompt", "ideas", "campaign"],
       approval_decision: ["approved", "changes_requested"],
       asset_kind: ["image", "video", "logo", "document"],
       campaign_goal: ["inquiries", "recruiting", "awareness", "event", "other"],

@@ -16,7 +16,7 @@ import {
   type DragStartEvent,
   type KeyboardCoordinateGetter,
 } from "@dnd-kit/core";
-import { Plus } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/domain/StatusBadge";
 import { Button } from "@/components/ui/Button";
@@ -28,6 +28,7 @@ import type { MemberRole } from "@/server/db/database.types";
 import type { PostListRow } from "@/server/posts/queries";
 import { savePreference } from "@/server/preferences";
 import type { ChannelOption } from "@/components/campaigns/CampaignFormModal";
+import { IdeasModal } from "@/components/ai/IdeasModal";
 import { NewPostModal, type CampaignOption } from "./NewPostModal";
 import { PostCard, type MemberInfo } from "./PostCard";
 import { applyPostFilter, type PostFilterState } from "@/lib/post-filter";
@@ -134,6 +135,7 @@ export function PipelineBoard({
   const [active, setActive] = useState<PostListRow | null>(null);
   const [creating, setCreating] = useState<PostStatus | null>(null);
   const [mobileTab, setMobileTab] = useState<PostStatus>("draft");
+  const [ideasOpen, setIdeasOpen] = useState(false);
   const memberMap = useMemo(() => new Map(members.map((m) => [m.userId, m])), [members]);
   const canCreate = role === "owner" || role === "editor";
   const canDrag = role !== "viewer";
@@ -213,9 +215,14 @@ export function PipelineBoard({
           <p className="text-body text-text-muted">{t("intro")}</p>
         </div>
         {canCreate && (
-          <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating("draft")}>
-            {t("newPost")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="ai" icon={<Sparkles aria-hidden />} onClick={() => setIdeasOpen(true)}>
+              {t("suggestIdeas")}
+            </Button>
+            <Button variant="primary" icon={<Plus aria-hidden />} onClick={() => setCreating("draft")}>
+              {t("newPost")}
+            </Button>
+          </div>
         )}
       </header>
 
@@ -357,6 +364,7 @@ export function PipelineBoard({
           defaults={{ status: creating === "idea" ? "idea" : "draft" }}
         />
       )}
+      {canCreate && <IdeasModal slug={slug} open={ideasOpen} onClose={() => setIdeasOpen(false)} channels={channels} />}
     </>
   );
 }

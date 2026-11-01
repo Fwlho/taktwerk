@@ -378,3 +378,42 @@ export async function savePromptTemplate(slug: string, input: { name: string; ki
     return { ok: true };
   });
 }
+
+const ideasInputSchema = z.object({
+  channelId: z.uuid(),
+  campaignId: z.uuid().nullable().optional(),
+  ideas: z
+    .array(z.object({ title: z.string().trim().min(1).max(200), body: z.string().max(5000), plannedOn: z.iso.date().nullable().optional() }))
+    .min(1)
+    .max(10),
+});
+
+/** KI-Ideen als Beiträge im Status „Idee“ anlegen; die Beschreibung landet in den internen Notizen. */
+export async function createIdeaPosts(
+  slug: string,
+  input: { channelId: string; campaignId?: string | null; ideas: { title: string; body: string; plannedOn?: string | null }[] },
+): Promise<ActionResult<{ ids: string[] }>> {
+  return guard(async () => {
+    const parsed = ideasInputSchema.safeParse(input);
+    if (!parsed.success) return { error: "invalid" };
+    const { organization } = await requirePermission(slug, "posts.create");
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("posts")
+      .insert(
+        parsed.data.ideas.map((idea) => ({
+          organization_id: organization.id,
+          channel_id: parsed.data.channelId,
+          campaign_id: parsed.data.campaignId ?? null,
+          title: idea.title,
+          internal_notes: idea.body || null,
+          planned_on: idea.plannedOn ?? null,
+          status: "idea" as const,
+        })),
+      )
+      .select("id");
+    if (error) return { error: dbError(error) };
+    revalidatePosts(slug);
+    return { ok: true, data: { ids: (data ?? []).map((d) => d.id) } };
+  });
+}

@@ -63,8 +63,11 @@ Funktionen: `apply_week_template(org, template, week_start)`, `copy_week(org, fr
 ## Phase 3 – KI
 | Tabelle | Wichtige Spalten | Hinweis |
 |---|---|---|
-| `ai_requests` | id, organization_id, user_id, kind, model, input_tokens, output_tokens, created_at | nur Nutzungsdaten, **keine** Prompts/Texte (Datensparsamkeit) |
-| `industry_templates` | id, industry, name, content jsonb | globale Vorlagen, nur lesbar, ohne org_id |
+| `ai_requests` | id, organization_id, user_id, kind (`ai_request_kind`: text, adapt, prompt, ideas, campaign), model, input_tokens, output_tokens, created_at, finished_at | nur Nutzungsdaten, **keine** Prompts/Texte (Datensparsamkeit); lesbar nur für `owner`; Schreiben nur über Funktionen |
+| `industry_templates` | id, industry, goal (`campaign_goal`), name, content jsonb (description, duration_weeks, channels[], ideas[{title, body}]) | globale Vorlagen, nur lesbar, ohne org_id; 4 allgemeine + 24 Branchen-Vorlagen |
+| `organizations.ai_daily_limit` | integer, Standard 100 | Kostenbremse je Unternehmen und Tag (Berliner Zeit); nur Betreiber ändern es |
+
+Funktionen: `begin_ai_request(org, kind)` (prüft Rolle owner/editor/external + Tageslimit, legt Protokoll an), `finish_ai_request(id, model, input, output)` (nur eigene, offene Anfrage), `ai_usage_today(org)`. Prompt-Ergebnisse (`post_ai_prompts.result/result_at`) dürfen Bearbeitende des Beitrags schreiben.
 
 ## Phase 4 – Messen & Steuern
 | Tabelle | Wichtige Spalten | Hinweis |

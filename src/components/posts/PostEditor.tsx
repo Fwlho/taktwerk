@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CalendarClock, ChevronLeft, CloudOff, Copy, Check, Send, Trash2, Undo2 } from "lucide-react";
+import { CalendarClock, ChevronLeft, CloudOff, Copy, Check, Send, Sparkles, Trash2, Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ChannelChip, ChannelMono } from "@/components/domain/ChannelChip";
 import { StatusBadge } from "@/components/domain/StatusBadge";
@@ -19,6 +19,8 @@ import { berlinLocalToIso, formatDateTime, isoToBerlinLocal } from "@/lib/format
 import { canTransition, statusStep } from "@/lib/post-transitions";
 import type { MemberRole } from "@/server/db/database.types";
 import { deletePost, savePostContent, setAssignees, transferPost, transitionPost } from "@/server/posts/actions";
+import { adaptTransferred, type AiStatus } from "@/server/ai/actions";
+import { AssistantPanel } from "@/components/ai/AssistantPanel";
 import type { PostDetail, PostThread as Thread } from "@/server/posts/queries";
 import type { ChannelOption } from "@/components/campaigns/CampaignFormModal";
 import { PostMedia } from "@/components/assets/PostMedia";
@@ -57,6 +59,7 @@ export function PostEditor({
   siblings,
   media,
   library,
+  aiStatus,
 }: {
   slug: string;
   post: PostDetail;
@@ -67,15 +70,17 @@ export function PostEditor({
   channels: ChannelOption[];
   campaigns: CampaignOption[];
   members: MemberInfo[];
-  siblings: { id: string; status: PostStatus; channels: { type: ChannelOption["type"]; name: string } | null }[];
+  siblings: { id: string; status: PostStatus; hasText: boolean; channels: { type: ChannelOption["type"]; name: string } | null }[];
   media: AssetItem[];
   library: AssetItem[];
+  aiStatus: AiStatus;
 }) {
   const t = useTranslations("posts.editor");
   const tc = useTranslations("channels.types");
   const tr = useTranslations("nav.roles");
   const te = useTranslations("errors");
   const tv = useTranslations("validation");
+  const ta = useTranslations("ai");
   const toast = useToast();
   const router = useRouter();
   const memberMap = useMemo(() => new Map(members.map((m) => [m.userId, m])), [members]);
@@ -96,8 +101,13 @@ export function PostEditor({
   const version = useRef(post.version);
   const dirty = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [panel, setPanel] = useState<"preview" | "activity">("preview");
-  const [mobileTab, setMobileTab] = useState<"text" | "preview">("text");
+  const [panel, setPanel] = useState<"assistant" | "preview" | "activity">(
+    aiStatus.allowed && role !== "viewer" && post.status !== "published" && post.status !== "evaluated" ? "assistant" : "preview",
+  );
+  const [mobileTab, setMobileTab] = useState<"text" | "side">("text");
+  const [highlight, setHighlight] = useState(false);
+  const highlightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [adaptOnTransfer, setAdaptOnTransfer] = useState(true);
   const [busy, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
@@ -290,6 +300,18 @@ export function PostEditor({
     }
   }
 
+  const canAdapt = aiStatus.configured && aiStatus.allowed && fields.body.trim().length > 0;
+
+  /** KI-Text übernehmen: 2 s hinterlegen, alten Text für „Rückgängig“ zurückgeben */
+  function applyAiText(text: string) {
+    const previous = fields.body;
+    update({ body: text });
+    setHighlight(true);
+    if (highlightTimer.current) clearTimeout(highlightTimer.current);
+    highlightTimer.current = setTimeout(() => setHighlight(false), 2000);
+    return previous;
+  }
+
   const step = statusStep(status);
   const siblingTypes = new Set(siblings.flatMap((s) => (s.channels ? [s.channels.type] : [])));
   const transferOptions = channels.filter((c) => c.id !== fields.channelId && !siblingTypes.has(c.type));
@@ -393,7 +415,10 @@ export function PostEditor({
           showCount={!!limit}
           onChange={(e) => update({ body: e.target.value })}
           error={limit && fields.body.length > limit ? tv("tooLong") : undefined}
-          className="[&_textarea]:min-h-48"
+          className={cx(
+            "[&_textarea]:min-h-48 [&_textarea]:transition-colors [&_textarea]:duration-(--duration-base)",
+            highlight && "[&_textarea]:bg-ai-soft",
+          )}
         />
       </div>
 
@@ -455,7 +480,14 @@ export function PostEditor({
         </fieldset>
       )}
 
-      <PromptList slug={slug} postId={post.id} initial={thread.prompts} readOnly={!canEditText} />
+      <PromptList
+        slug={slug}
+        postId={post.id}
+        initial={thread.prompts}
+        readOnly={!canEditText}
+        canRun={aiStatus.configured && aiStatus.allowed && canEditText}
+        onUseResult={(text) => void applyAiText(text)}
+      />
 
       <PostThread
         slug={slug}
@@ -482,8 +514,8 @@ export function PostEditor({
 
   const side = (
     <div className="flex flex-col gap-4">
-      <div role="tablist" className="inline-flex gap-0.5 self-start rounded-md bg-surface-sunken p-[3px]">
-        {(["preview", "activity"] as const).map((p) => (
+      <div role="tablist" className="hidden gap-0.5 self-start rounded-md bg-surface-sunken p-[3px] tablet:inline-flex">
+        {(["assistant", "preview", "activity"] as const).map((p) => (
           <button
             key={p}
             role="tab"
@@ -492,14 +524,26 @@ export function PostEditor({
             onClick={() => setPanel(p)}
             className={cx("h-[34px] rounded-[8px] px-4 text-label", panel === p ? "bg-surface shadow-sm" : "text-text-muted hover:text-text")}
           >
+            {p === "assistant" && <Sparkles aria-hidden className="mr-1 inline icon-sm text-ai" />}
             {t(`panel.${p}`)}
           </button>
         ))}
-        <span className="inline-flex h-[34px] items-center px-4 text-label text-text-disabled" title={t("assistantSoon")}>
-          {t("panel.assistant")}
-        </span>
       </div>
-      {panel === "preview" ? (
+      {panel === "assistant" ? (
+        channel && (
+          <AssistantPanel
+            slug={slug}
+            postId={post.id}
+            channel={channel.type}
+            body={fields.body}
+            readOnly={!canEditText}
+            status={aiStatus}
+            sources={siblings.flatMap((s) => (s.hasText && s.channels ? [{ id: s.id, type: s.channels.type }] : []))}
+            onApply={applyAiText}
+            onUndo={(previous) => update({ body: previous })}
+          />
+        )
+      ) : panel === "preview" ? (
         channel && (
           <PostPreview
             channel={channel.type}
@@ -564,25 +608,31 @@ export function PostEditor({
         </div>
       </header>
 
-      {/* Mobil: Tabs Text · Vorschau */}
+      {/* Mobil: eine Tab-Leiste Text · Assistent · Vorschau · Verlauf */}
       <div role="tablist" className="inline-flex gap-0.5 self-start rounded-md bg-surface-sunken p-[3px] tablet:hidden">
-        {(["text", "preview"] as const).map((p) => (
-          <button
-            key={p}
-            role="tab"
-            type="button"
-            aria-selected={mobileTab === p}
-            onClick={() => setMobileTab(p)}
-            className={cx("h-[34px] rounded-[8px] px-4 text-label", mobileTab === p ? "bg-surface shadow-sm" : "text-text-muted")}
-          >
-            {t(`mobileTabs.${p}`)}
-          </button>
-        ))}
+        {(["text", "assistant", "preview", "activity"] as const).map((p) => {
+          const active = p === "text" ? mobileTab === "text" : mobileTab === "side" && panel === p;
+          return (
+            <button
+              key={p}
+              role="tab"
+              type="button"
+              aria-selected={active}
+              onClick={() => {
+                setMobileTab(p === "text" ? "text" : "side");
+                if (p !== "text") setPanel(p);
+              }}
+              className={cx("h-[34px] rounded-[8px] px-3 text-label", active ? "bg-surface shadow-sm" : "text-text-muted")}
+            >
+              {t(`mobileTabs.${p}`)}
+            </button>
+          );
+        })}
       </div>
 
       <div className="grid gap-8 tablet:grid-cols-[1fr_minmax(0,400px)]">
-        <div className={cx(mobileTab !== "text" && "hidden tablet:block")}>{content}</div>
-        <aside className={cx("tablet:sticky tablet:top-8 tablet:self-start", mobileTab !== "preview" && "hidden tablet:block")}>{side}</aside>
+        <div className={cx("min-w-0", mobileTab !== "text" && "hidden tablet:block")}>{content}</div>
+        <aside className={cx("tablet:sticky tablet:top-8 tablet:self-start", mobileTab !== "side" && "hidden tablet:block")}>{side}</aside>
       </div>
 
       {transition.dialogs}
@@ -604,14 +654,24 @@ export function PostEditor({
               loading={busy}
               disabled={transferIds.length === 0}
               onClick={() =>
-                startTransition(async () => {
-                  const res = await transferPost(slug, post.id, transferIds);
-                  if (res.error) return toast({ kind: "error", title: te(res.error) });
-                  setTransferOpen(false);
-                  setTransferIds([]);
-                  toast({ kind: "success", title: t("transferred", { count: res.data?.ids.length ?? 0 }) });
-                  router.refresh();
-                })
+                void flushThen(() =>
+                  startTransition(async () => {
+                    const res = await transferPost(slug, post.id, transferIds);
+                    if (res.error || !res.data) return toast({ kind: "error", title: te(res.error ?? "generic") });
+                    const count = res.data.ids.length;
+                    if (canAdapt && adaptOnTransfer) {
+                      // Kopien sind angelegt; die KI passt sie danach je Kanal an
+                      const adapted = await adaptTransferred(slug, post.id, res.data.ids);
+                      if (adapted.error) toast({ kind: "warning", title: t("transferredNoAi", { count }), text: ta(`errors.${adapted.error}` as never) });
+                      else toast({ kind: "ai", title: t("transferredAi", { count: adapted.data!.adapted }) });
+                    } else {
+                      toast({ kind: "success", title: t("transferred", { count }) });
+                    }
+                    setTransferOpen(false);
+                    setTransferIds([]);
+                    router.refresh();
+                  }),
+                )
               }
             >
               {t("transferSubmit")}
@@ -635,6 +695,20 @@ export function PostEditor({
             );
           })}
         </div>
+        {canAdapt && (
+          <label className="mt-4 flex items-start gap-2 text-body">
+            <input
+              type="checkbox"
+              checked={adaptOnTransfer}
+              onChange={(e) => setAdaptOnTransfer(e.target.checked)}
+              className="mt-0.5 size-5 accent-[var(--color-ai)]"
+            />
+            <span className="flex flex-col">
+              <span>{t("transferAdapt")}</span>
+              <span className="text-small text-text-muted">{t("transferAdaptHint")}</span>
+            </span>
+          </label>
+        )}
       </Modal>
 
       <Modal

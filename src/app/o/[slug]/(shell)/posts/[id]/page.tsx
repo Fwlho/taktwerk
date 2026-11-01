@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { PostEditor } from "@/components/posts/PostEditor";
+import { getAiStatus } from "@/server/ai/actions";
 import { listAssets, listAssetsForPost } from "@/server/assets/queries";
 import { requireNavAccess } from "@/server/auth/nav-access";
 import { listCampaigns } from "@/server/campaigns/queries";
@@ -19,7 +20,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { organization, role, user } = await requireNavAccess(slug, "posts");
   const post = await getPost(organization.id, id);
   if (!post) notFound();
-  const [thread, channels, campaigns, members, siblings, media, library] = await Promise.all([
+  const [thread, channels, campaigns, members, siblings, media, library, aiStatus] = await Promise.all([
     getPostThread(organization.id, id),
     listChannels(organization.id),
     role === "external" ? Promise.resolve([]) : listCampaigns(organization.id),
@@ -27,6 +28,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     listGroupSiblings(organization.id, post.group_id, post.id),
     listAssetsForPost(organization.id, post.id),
     listAssets(organization.id),
+    getAiStatus(slug),
   ]);
 
   // Externe sehen ggf. nur die Kampagne ihres Beitrags
@@ -49,9 +51,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       channels={channels.map((c) => ({ id: c.id, type: c.type, name: c.name }))}
       campaigns={campaignOptions}
       members={members.map((m) => ({ userId: m.userId, fullName: m.fullName, role: m.role }))}
-      siblings={siblings}
+      siblings={siblings.map(({ body, ...s }) => ({ ...s, hasText: body.trim().length > 0 }))}
       media={media}
       library={library}
+      aiStatus={aiStatus}
     />
   );
 }

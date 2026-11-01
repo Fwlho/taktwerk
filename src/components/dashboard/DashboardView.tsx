@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CalendarCheck, Circle, CircleCheck, Flag, Hourglass, Send } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
+import { IdeasSuggestion } from "@/components/ai/IdeasSuggestion";
 import { CalendarEntry } from "@/components/calendar/CalendarEntry";
 import { ActivityList } from "@/components/posts/ActivityList";
 import { PostCard, type MemberInfo } from "@/components/posts/PostCard";
@@ -14,6 +15,7 @@ import { cx } from "@/lib/cx";
 import { formatDateTime, formatDayMonth, formatEuro, parseDateOnly } from "@/lib/format";
 import type { MemberRole } from "@/server/db/database.types";
 import type { DashboardData } from "@/server/dashboard/queries";
+import type { ChannelType } from "@/lib/domain";
 
 type ChecklistItem = { key: "profile" | "channels" | "campaign"; done: boolean; href: string | null };
 
@@ -25,6 +27,8 @@ export function DashboardView({
   data,
   members,
   checklist,
+  channels,
+  aiConfigured,
 }: {
   slug: string;
   role: MemberRole;
@@ -33,6 +37,8 @@ export function DashboardView({
   data: DashboardData;
   members: MemberInfo[];
   checklist: ChecklistItem[];
+  channels: { id: string; type: ChannelType }[];
+  aiConfigured: boolean;
 }) {
   const t = useTranslations("dashboard");
   const format = useFormatter();
@@ -200,6 +206,7 @@ export function DashboardView({
         </div>
 
         <div className="flex flex-col gap-4 desktop:col-span-4">
+          {(role === "owner" || role === "editor") && <IdeasSuggestion slug={slug} channels={channels} configured={aiConfigured} />}
           {showChecklist && (
             <section aria-labelledby="check-h" className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-5">
               <h2 id="check-h" className="text-h2">

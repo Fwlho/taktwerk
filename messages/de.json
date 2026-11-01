@@ -234,13 +234,48 @@
   "onboarding": {
     "title": "Einrichtung",
     "asideTitle": "In 5 Minuten startklar",
-    "asideText": "Ein kurzer Schritt. Alles lässt sich später ändern.",
+    "asideText": "Drei kurze Schritte. Alles lässt sich später ändern.",
     "steps": {
-      "company": "Dein Betrieb"
+      "company": "Dein Betrieb",
+      "channels": "Kanäle",
+      "goal": "Erstes Ziel"
     },
     "trust": "Wir veröffentlichen nie etwas ohne deine Freigabe.",
-    "heading": "Erzähl uns von deinem Betrieb",
-    "subheading": "Damit der Assistent passende Ideen und Texte in deinem Ton vorschlägt."
+    "progress": "Schritt {step} von {total}",
+    "headings": {
+      "company": "Erzähl uns von deinem Betrieb",
+      "channels": "Wo bist du unterwegs?",
+      "goal": "Was ist dein erstes Ziel?"
+    },
+    "subheadings": {
+      "company": "Damit der Assistent passende Ideen und Texte in deinem Ton vorschlägt.",
+      "channels": "Wähle die Kanäle, die du planen möchtest. Das Verbinden mit den Plattformen folgt später.",
+      "goal": "Der Assistent legt daraus eine erste Kampagne mit vier Beitragsideen an."
+    },
+    "channels": {
+      "added": "Bereits angelegt",
+      "notConnected": "Planen möglich · Verbinden folgt später",
+      "offlineHint": "Flyer, Plakat, Fahrzeug, Messe, Anzeige",
+      "hint": "Kanäle lassen sich jederzeit unter „Kanäle“ ändern.",
+      "skip": "Später",
+      "next": "Weiter"
+    },
+    "goal": {
+      "legend": "Erstes Ziel",
+      "hints": {
+        "inquiries": "Mehr Anfragen, Aufträge oder Reservierungen",
+        "recruiting": "Fachkräfte, Azubis oder Aushilfen finden",
+        "awareness": "In der Region bekannter werden",
+        "event": "Einen Termin bewerben: Fest, Messe, Aktion"
+      },
+      "aiHint": "Der Assistent passt eine Branchenvorlage an deinen Betrieb an. Du prüfst alles, bevor etwas veröffentlicht wird.",
+      "templateHint": "Die Kampagne entsteht aus einer Branchenvorlage. Mit KI-Assistent wird sie persönlicher.",
+      "start": "Kampagne anlegen",
+      "skip": "Später",
+      "planning": "Der Assistent plant eure erste Kampagne … das dauert etwa eine halbe Minute.",
+      "planningTemplate": "Kampagne wird angelegt …",
+      "done": "Erste Kampagne mit {count, plural, one {# Beitragsidee} other {# Beitragsideen}} angelegt"
+    }
   },
   "profile": {
     "industry": "Branche",
@@ -279,10 +314,9 @@
     "servicesHint": "Mit Komma trennen. Der Assistent nutzt sie für Ideen.",
     "servicesPlaceholder": "z. B. Fassadenanstrich, Tapezieren, Bodenbeläge",
     "later": "Später ausfüllen",
-    "finish": "Fertig",
+    "finish": "Weiter",
     "save": "Speichern",
-    "saved": "Profil gespeichert",
-    "savedOnboarding": "Alles eingerichtet – willkommen bei Taktwerk"
+    "saved": "Profil gespeichert"
   },
   "settings": {
     "title": "Einstellungen",
@@ -430,7 +464,8 @@
         "scheduled": "Eingeplant.",
         "published": "Veröffentlicht.",
         "evaluated": "Ausgewertet."
-      }
+      },
+      "suggestIdeas": "Ideen vorschlagen"
     },
     "transition": {
       "undo": "Rückgängig",
@@ -498,11 +533,17 @@
       "down": "Nach unten",
       "delete": "Löschen",
       "result": "Ergebnis",
-      "runLater": "Ausführen folgt mit dem KI-Assistenten.",
+      "runLater": "Ausführen ist möglich, sobald der KI-Assistent eingerichtet ist.",
       "mediaHint": "Bild- und Video-Prompts zum Kopieren in dein Bild- oder Video-Werkzeug.",
       "fromTemplate": "Aus Vorlage",
       "templatesTitle": "Prompt-Vorlage einfügen",
-      "noTemplates": "Noch keine Vorlagen. Speichere einen Prompt mit dem Lesezeichen-Symbol als Vorlage."
+      "noTemplates": "Noch keine Vorlagen. Speichere einen Prompt mit dem Lesezeichen-Symbol als Vorlage.",
+      "run": "Ausführen",
+      "runAgain": "Neu ausführen",
+      "copyResult": "Ergebnis kopieren",
+      "useResult": "In Beitragstext übernehmen",
+      "checkHint": "KI-Vorschläge vor dem Veröffentlichen bitte prüfen.",
+      "runHint": "Text- und Caption-Prompts führt der Assistent direkt aus."
     },
     "activity": {
       "empty": "Noch keine Änderungen.",
@@ -580,16 +621,21 @@
         "activity": "Verlauf",
         "assistant": "Assistent"
       },
-      "assistantSoon": "Der KI-Assistent kommt mit dem nächsten Update.",
       "mobileTabs": {
         "text": "Text",
-        "preview": "Vorschau"
+        "preview": "Vorschau",
+        "assistant": "Assistent",
+        "activity": "Verlauf"
       },
       "delete": "Beitrag löschen",
       "deleteTitle": "Beitrag löschen?",
       "deleteText": "Text, Kommentare und Prompts gehen verloren. Das lässt sich nicht rückgängig machen.",
       "keep": "Behalten",
-      "deleted": "Beitrag gelöscht"
+      "deleted": "Beitrag gelöscht",
+      "transferAdapt": "Texte mit KI an jeden Kanal anpassen",
+      "transferAdaptHint": "Kostet je Kanal einen KI-Vorschlag. Ohne Häkchen wird der Text 1:1 kopiert.",
+      "transferredAi": "{count, plural, one {Beitrag übertragen und angepasst} other {# Beiträge übertragen und angepasst}}",
+      "transferredNoAi": "{count, plural, one {Beitrag übertragen} other {# Beiträge übertragen}} – ohne KI-Anpassung"
     }
   },
   "channels": {
@@ -718,7 +764,8 @@
       "save": "Speichern",
       "created": "Kampagne angelegt",
       "saved": "Kampagne gespeichert"
-    }
+    },
+    "suggest": "Kampagne vorschlagen"
   },
   "approvals": {
     "title": "Freigaben",
@@ -949,6 +996,98 @@
       "save": "Vorlage speichern",
       "saved": "Vorlage gespeichert",
       "weekEmpty": "Plane zuerst Beiträge in dieser Woche – dann kannst du sie als Vorlage speichern."
+    },
+    "suggestIdeas": "Ideen vorschlagen",
+    "ideasSubtitle": "Ideen werden auf die Tage dieser Woche verteilt (Mo, Mi, Fr …)."
+  },
+  "ai": {
+    "suggestion": {
+      "writing": "Schreibe Vorschlag …",
+      "errorTitle": "Vorschlag konnte nicht erstellt werden",
+      "errorText": "Der Assistent ist gerade nicht erreichbar. Dein Text bleibt unverändert.",
+      "applied": "Übernommen",
+      "stop": "Stopp",
+      "apply": "Übernehmen",
+      "regenerate": "Neu",
+      "shorter": "Kürzer",
+      "longer": "Länger",
+      "casual": "Lockerer",
+      "discard": "Verwerfen",
+      "retry": "Nochmal versuchen",
+      "close": "Schließen",
+      "undo": "Rückgängig",
+      "note": "KI-Vorschläge vor dem Veröffentlichen bitte prüfen."
+    },
+    "errors": {
+      "aiNotConfigured": "Der KI-Assistent ist noch nicht eingerichtet.",
+      "aiLimit": "Das Tageslimit für KI-Vorschläge ist erreicht. Morgen geht es weiter.",
+      "aiRefused": "Dazu kann der Assistent keinen Vorschlag machen. Formuliere die Anfrage bitte anders.",
+      "aiBusy": "Der Assistent ist gerade ausgelastet. Bitte versuch es gleich noch einmal.",
+      "aiFailed": "Der Vorschlag konnte nicht erstellt werden. Dein Text bleibt unverändert.",
+      "forbidden": "Dafür fehlt dir die Berechtigung.",
+      "invalid": "Die Eingabe ist ungültig.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuch es noch einmal."
+    },
+    "assistant": {
+      "title": "KI-Assistent",
+      "suggestionFor": "Vorschlag für {channel}",
+      "adaptTitle": "Für {channel} angepasst",
+      "fromChannel": "aus der {channel}-Fassung",
+      "fromSuggestion": "aus dem Vorschlag",
+      "fromDraft": "aus deinem Entwurf",
+      "fromTopic": "aus Titel und Notizen",
+      "notConfigured": "Der KI-Assistent ist noch nicht eingerichtet. Sobald der Zugang hinterlegt ist, schreibt er hier Texte und Kanal-Anpassungen.",
+      "readOnly": "Den Assistenten nutzen Personen, die diesen Beitrag bearbeiten dürfen.",
+      "quick": "Schnellbefehle",
+      "modes": {
+        "improve": "Verbessern",
+        "shorter": "Kürzer",
+        "longer": "Länger",
+        "casual": "Lockerer",
+        "question": "Mit Frage enden",
+        "hashtags": "Hashtags",
+        "write": "Schreiben",
+        "adapt": "Anpassen"
+      },
+      "adapt": "Aus anderem Kanal anpassen",
+      "adaptFrom": "Aus {channel} übernehmen",
+      "empty": "Noch kein Text. Sag mir in einem Satz, worum es gehen soll – ich schreibe einen Entwurf.",
+      "emptyWithText": "Sag mir, was ich ändern soll – oder nutze einen Schnellbefehl.",
+      "instruction": "Wunsch an den Assistenten",
+      "instructionPlaceholder": "z. B. „Fassade Lindenstraße fertig, Termine im Mai frei“",
+      "write": "Text schreiben",
+      "rewrite": "Überarbeiten",
+      "remaining": "Heute noch {count} von {limit} KI-Vorschlägen",
+      "limitReached": "Tageslimit erreicht – morgen geht es weiter."
+    },
+    "ideas": {
+      "title": "Ideen für eure nächsten Beiträge",
+      "modalTitle": "Ideen vorschlagen",
+      "modalSubtitle": "Der Assistent schlägt Themen passend zu eurem Betrieb vor.",
+      "empty": "Der Assistent schlägt fünf Themen passend zu Branche, Saison und euren Leistungen vor.",
+      "channel": "Kanal",
+      "topic": "Schwerpunkt",
+      "topicPlaceholder": "z. B. Frühjahrsaktion, neues Teammitglied",
+      "suggest": "Ideen vorschlagen",
+      "createAll": "Alle als Ideen anlegen",
+      "created": "{count, plural, one {Idee angelegt} other {# Ideen angelegt}}",
+      "hint": "Ein Klick legt die Idee als Beitrag im Status „Idee“ an.",
+      "noChannel": "Lege zuerst einen Kanal an, dann schlägt der Assistent Ideen vor."
+    },
+    "campaign": {
+      "title": "Kampagne vorschlagen",
+      "subtitle": "Ziel wählen – der Assistent plant eine Kampagne mit vier Beitragsideen.",
+      "goal": "Ziel",
+      "topic": "Anlass oder Schwerpunkt",
+      "topicHint": "z. B. Tag der offenen Tür am 14. Juni",
+      "suggest": "Vorschlag erstellen",
+      "suggestTemplate": "Vorschlag aus Branchenvorlage",
+      "fromProfile": "aus deinem Profil",
+      "fromTemplate": "aus der Branchenvorlage",
+      "apply": "Kampagne anlegen",
+      "duration": "{count, plural, one {# Woche} other {# Wochen}}",
+      "week": "Woche {week}",
+      "created": "Kampagne mit {count, plural, one {# Idee} other {# Ideen}} angelegt"
     }
   }
 }

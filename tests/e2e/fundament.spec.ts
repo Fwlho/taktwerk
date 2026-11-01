@@ -56,7 +56,13 @@ test("Anmelden → Unternehmen anlegen → Onboarding → Mitglied einladen", as
   await page.getByLabel("Branche").selectOption("craft");
   await page.getByText("Privatkunden").click();
   await page.getByText("Per Sie, sachlich").click();
-  await page.getByRole("button", { name: "Fertig" }).click();
+  await page.getByRole("button", { name: "Weiter" }).click();
+
+  // Schritt 2: Kanäle (Voreinstellung übernehmen), Schritt 3: Ziel später wählen
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Wo bist du unterwegs?");
+  await page.getByRole("button", { name: "Weiter" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Was ist dein erstes Ziel?");
+  await page.getByRole("button", { name: "Später" }).click();
 
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Anna");
   await expect(page.getByRole("navigation", { name: "Hauptnavigation" }).first()).toBeVisible();
