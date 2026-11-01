@@ -6,4 +6,14 @@ export function notificationLink(slug: string, type: string, postId?: string, we
   return postId ? `/o/${slug}/posts/${postId}` : `/o/${slug}`;
 }
 
-export const NOTIFICATION_TYPES = ["approval_requested", "post_approved", "changes_requested", "comment_added", "post_assigned", "week_submitted", "week_approved"] as const;
+export const NOTIFICATION_TYPES = [
+  "approval_requested",
+  "post_approved",
+  "changes_requested",
+  "comment_added",
+  "post_assigned",
+  "week_submitted",
+  "week_approved",
+  "post_published",
+  "publish_failed",
+] as const;

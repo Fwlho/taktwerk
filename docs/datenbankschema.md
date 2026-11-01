@@ -81,7 +81,13 @@ Funktionen: `begin_ai_request(org, kind)` (prüft Rolle owner/editor/external + 
 ## Phase 5 – Plattform
 | Tabelle | Wichtige Spalten | Hinweis |
 |---|---|---|
-| `publish_jobs` | id, organization_id, post_id, run_at, attempts, status, last_error | von pg_cron abgearbeitet, ruft `PublishingProvider` auf |
+| `channels.external_account_id` | text | Konto auf der Plattform (z. B. Facebook-Seiten-ID); schreibt nur der Server |
+| `posts.external_url`, `publish_attempts`, `publish_retry_at` | text, smallint, timestamptz | Link zum veröffentlichten Beitrag; Wiederholungen bei Fehlern (höchstens 5) |
+
+Statt einer eigenen Job-Tabelle sind geplante Beiträge selbst die Warteschlange (Status `scheduled` + Termin).
+Funktionen (nur Service-Rolle): `claim_due_posts(limit, post?)` reserviert fällige Beiträge auf verbundenen Kanälen (`for update skip locked`, 5 Min. Sperre),
+`mark_post_published(post, external_id, url)`, `mark_post_failed(post, error, retry)` (wachsender Abstand; endgültig → Benachrichtigung `publish_failed`).
+Neu planen setzt Versuche und Fehler zurück (Trigger `posts_publish_reset`). Die Service-Rolle darf das Schema `private` nutzen (Trigger-Hilfsfunktionen).
 
 ## Rechte (RLS, Kurzfassung)
 | Rolle | Lesen | Schreiben |

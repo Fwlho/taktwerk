@@ -27,7 +27,7 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 - **date-fns** (Locale `de`) – leichtgewichtig, baumförmig importierbar.
 - **Eigener kleiner Service Worker (`public/sw.js`) statt Serwist** – nur Push + Installierbarkeit nötig, keine Zwischenspeicherung personenbezogener Seiten; Serwist erst, falls Offline-Betrieb gebraucht wird.
 - **web-push** (VAPID) – Standardbibliothek für Web-Push ohne Fremddienst.
-- **pg_cron + Job-Tabelle** – geplante Veröffentlichungen laufen in Supabase (EU), kein zusätzlicher Dienstleister.
+- **Geplante Beiträge als Warteschlange** – `claim_due_posts` (DB) reserviert fällige Beiträge; lokal ruft ein Takt im Server (`src/instrumentation.ts`, jede Minute) sie ab, online später pg_cron → `/api/cron/publish` (`CRON_SECRET`).
 - **Verschlüsselung AES-256-GCM (node:crypto)** – Plattform-Tokens verschlüsselt, Schlüssel nur in `TOKEN_ENCRYPTION_KEY`.
 - **Recharts** – einfache, gepflegte Diagramme für Dashboard/Bericht (Phase 4).
 - **Tests:** Vitest (Logik), pgTAP via `supabase test db` (RLS/Mandantentrennung), Playwright (Ende-zu-Ende).
@@ -41,7 +41,7 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 ## Architekturregeln
 - **Mandantenfähig:** jede fachliche Tabelle hat `organization_id`; Zugriff über RLS. Ausnahmen (nutzerbezogen/global) sind im Schema begründet.
 - **Rechte serverseitig:** Rollen `owner`, `editor`, `external`, `viewer`; Statuswechsel nur über DB-Funktion `transition_post_status` (prüft Rolle + erlaubten Übergang).
-- **Plattformen:** nur über Interface `PublishingProvider` (`publish`, `schedule`, `fetchMetrics`) in `src/server/publishing/`. Erste Umsetzung: Ayrshare. Weitere Anbieter = neue Klasse, keine Änderung der übrigen App.
+- **Plattformen:** nur über Interface `PublishingProvider` (`publish`, `schedule`, `fetchMetrics`) in `src/server/publishing/`. Erste Umsetzung: Facebook-Seiten direkt über die Meta Graph API (Entscheidung Phase 5, statt Ayrshare: kostenlos, keine Daten bei Dritten). Weitere Anbieter = neue Klasse, keine Änderung der übrigen App.
 - **KI:** nur über `src/server/ai/` (Service-Schicht); kein direkter SDK-Aufruf in UI/Actions.
 - **Geheimnisse:** nur Umgebungsvariablen (`.env.local`, nie eingecheckt; Vorlage `.env.example`). Service-Role-Key nur serverseitig.
 - **Verlauf:** Änderungen an Beiträgen und Freigaben per DB-Trigger in `activity_log` (wer, was, wann).
@@ -66,6 +66,13 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 - Kostenbremse: `organizations.ai_daily_limit` (100/Tag); jede Anfrage über `begin_ai_request` (prüft Rolle + Limit), Verbrauch ohne Texte in `ai_requests`.
 - Tests ohne Kosten: `AI_FAKE=1` (Playwright setzt es selbst) liefert feste Beispieltexte. Echte KI nie in Tests.
 - Datenschutz: Beitragstexte und Unternehmensprofil gehen zur Verarbeitung an Anthropic (USA) → in den Datenschutzhinweis aufnehmen.
+
+## Plattformen
+- Facebook: eigene Meta-App, `META_APP_ID`/`META_APP_SECRET`/`META_GRAPH_VERSION` in `.env.local`. Ablauf: `/o/[slug]/channels/facebook/connect` → Meta-Anmeldung → `/auth/facebook/callback` (als Weiterleitung in der Meta-App eingetragen) → Seite wählen → Seiten-Token verschlüsselt in `channel_credentials`.
+- Zugangsdaten nur über Admin-Client (Service-Rolle); Nutzer-Token zwischendurch nur verschlüsselt im Cookie (15 Min.). Aufrufe mit `appsecret_proof`.
+- Fehler werden als Code gespeichert (`publish_error`, Übersetzung `posts.editor.publishErrors.*`); Token ungültig → Kanal „abgelaufen“.
+- Meta-Testmodus: Posts sind evtl. nur für App-Rollen sichtbar. Öffentlich erst nach Meta-Prüfung (braucht HTTPS-Adresse + Datenschutzseite) – zusammen mit dem Online-Betrieb.
+- Tests: `PUBLISH_FAKE=1` (Playwright setzt es) – simulierte Seiten, nichts wird veröffentlicht; Text „#fehler“ erzeugt eine Ablehnung.
 
 ## Push
 - VAPID-Schlüssel in `.env.local` (`NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). Versand nach Server Actions per `after(() => sendPendingPushes(orgId))`; Benachrichtigungen selbst erzeugen DB-Trigger/`transition_post_status`.
@@ -108,5 +115,5 @@ docs/                   Entscheidungen, Schema
   - Wochenplan = Ansicht auf normale Beiträge (keine eigene Datenhaltung): Woche → Plattform → Tag → Beiträge, umschaltbar auf Tag → Plattformen; mehrere Beiträge je Tag/Plattform; Fortschritt je Plattform, Statuspunkt je Tag; Beitragsfelder interne Notizen + beliebig viele KI-Prompts (text/image/video/caption, Ergebnis, Reihenfolge; kopierbar, ausführbar, als Vorlage speicherbar); Wochenvorlagen + „Vorwoche kopieren“; Woche (eine/alle Plattformen) gesammelt zur Freigabe, owner gibt gesammelt oder einzeln frei; Beitrag auf andere Plattformen übertragen (KI-Anpassung in Phase 3)
 - [x] **3 – KI-Assistent:** Assistent im Editor (schreiben, Schnellbefehle, Kanal-Anpassung, Übernehmen/Rückgängig), Prompts ausführen, Übertragen mit KI-Anpassung, Ideen (Übersicht, Kanban, Wochenplan), Kampagnenvorschläge aus 28 Branchenvorlagen, Onboarding Schritt 2 (Kanäle) + 3 (erstes Ziel → Kampagne mit 4 Ideen), Tageslimit ✓ (129 DB-, 51 Unit-, 12 Browser-Tests grün)
 - [ ] **4 – Messen & Steuern:** Offline-Maßnahmen (QR/Rabattcode), Budget, Kennzahlen manuell, Dashboard, Monatsbericht
-- [ ] **5 – Plattform-Anbindung:** Kanäle verbinden, automatisch veröffentlichen, Kennzahlen importieren
+- [ ] **5 – Plattform-Anbindung:** Facebook-Seite verbinden/trennen, sofort und geplant veröffentlichen, Wiederholung bei Fehlern, Benachrichtigung ✓ (143 DB-, 59 Unit-, 13 Browser-Tests grün); offen: echte Meta-App einrichten + testen, Instagram, weitere Plattformen, Kennzahlen importieren, Online-Betrieb
 - [ ] **6 – Abrechnung/Abo** (später)

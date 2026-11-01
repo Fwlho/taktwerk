@@ -46,7 +46,7 @@ export const getPost = cache(async (organizationId: string, id: string) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "id, organization_id, title, body, internal_notes, status, planned_on, scheduled_at, published_at, publish_error, campaign_id, channel_id, group_id, created_by, version, updated_at, created_at, channels(id, type, name), campaigns(id, name), post_assignees(user_id)",
+      "id, organization_id, title, body, internal_notes, status, planned_on, scheduled_at, published_at, publish_error, external_url, campaign_id, channel_id, group_id, created_by, version, updated_at, created_at, channels(id, type, name), campaigns(id, name), post_assignees(user_id)",
     )
     .eq("organization_id", organizationId)
     .eq("id", id)

@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plug, Plus, Trash2 } from "lucide-react";
+import { Plug, PlugZap, Plus, Trash2, Unplug } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ChannelChip, ChannelMono } from "@/components/domain/ChannelChip";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClasses } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
 import { cx } from "@/lib/cx";
 import type { ChannelType } from "@/lib/domain";
+import { CONNECTABLE_CHANNELS } from "@/lib/publishing";
 import { addChannel, removeChannel } from "@/server/channels/actions";
+import { disconnectChannel } from "@/server/publishing/actions";
 import type { ChannelRow } from "@/server/channels/queries";
 
 export function ChannelCard({
@@ -17,11 +19,14 @@ export function ChannelCard({
   type,
   channel,
   canManage,
+  connectAvailable,
 }: {
   slug: string;
   type: ChannelType;
   channel: ChannelRow | null;
   canManage: boolean;
+  /** Plattform-Zugang (Meta-App) ist eingerichtet */
+  connectAvailable: boolean;
 }) {
   const t = useTranslations("channels");
   const tc = useTranslations("channels.types");
@@ -29,6 +34,10 @@ export function ChannelCard({
   const toast = useToast();
   const [pending, startTransition] = useTransition();
   const [confirm, setConfirm] = useState(false);
+  const [confirmDisconnect, setConfirmDisconnect] = useState(false);
+  const connectable = CONNECTABLE_CHANNELS.includes(type);
+  const status = channel?.connection_status ?? "not_connected";
+  const connected = status === "connected";
   const name = tc(type);
 
   function add() {
@@ -36,6 +45,15 @@ export function ChannelCard({
       const res = await addChannel(slug, { type, name });
       if (res.error) toast({ kind: "error", title: te(res.error) });
       else toast({ kind: "success", title: t("added", { name }) });
+    });
+  }
+
+  function disconnect() {
+    startTransition(async () => {
+      const res = await disconnectChannel(slug, channel!.id);
+      setConfirmDisconnect(false);
+      if (res.error) toast({ kind: "error", title: te(res.error) });
+      else toast({ kind: "success", title: t("disconnected", { name }) });
     });
   }
 
@@ -68,15 +86,44 @@ export function ChannelCard({
             {type === "offline" ? (
               <ChannelChip type={type} label={t("offlineReady")} compact />
             ) : (
-              <ChannelChip type={type} label={t(`connection.${channel.connection_status}`)} state="off" compact />
+              <ChannelChip
+                type={type}
+                label={t(`connection.${status}`)}
+                state={connected ? "default" : status === "expired" || status === "error" ? "error" : "off"}
+                compact
+              />
             )}
           </div>
-          {type !== "offline" && <p className="text-small text-text-muted">{t("connectLater")}</p>}
+          {connected && channel.external_account_name && (
+            <p className="text-small">
+              {t("account")}: <span className="font-semibold">{channel.external_account_name}</span>
+            </p>
+          )}
+          {type !== "offline" && !connected && (
+            <p className="text-small text-text-muted">
+              {!connectable ? t("connectLater") : status === "expired" ? t("expiredHint") : connectAvailable ? t("connectHint") : t("connectSetup")}
+            </p>
+          )}
           {canManage && (
             <div className="mt-auto flex flex-wrap gap-2 pt-2">
-              {type !== "offline" && (
-                <Button size="sm" icon={<Plug className="icon-sm" />} disabled>
-                  {t("connect")}
+              {type !== "offline" &&
+                (connectable && connectAvailable ? (
+                  // Volle Seitennavigation: führt zur Anmeldung bei der Plattform
+                  <a
+                    href={`/o/${slug}/channels/${type}/connect`}
+                    className={buttonClasses({ size: "sm", variant: connected ? "secondary" : "primary" })}
+                  >
+                    {connected ? <PlugZap aria-hidden className="icon-sm" /> : <Plug aria-hidden className="icon-sm" />}
+                    {connected ? t("reconnect") : status === "expired" ? t("reconnect") : t("connect")}
+                  </a>
+                ) : (
+                  <Button size="sm" icon={<Plug className="icon-sm" />} disabled>
+                    {t("connect")}
+                  </Button>
+                ))}
+              {connected && (
+                <Button size="sm" variant="ghost" icon={<Unplug className="icon-sm" />} onClick={() => setConfirmDisconnect(true)}>
+                  {t("disconnect")}
                 </Button>
               )}
               <Button
@@ -98,6 +145,28 @@ export function ChannelCard({
       ) : (
         <p className="mt-auto text-small text-text-muted">{t("notAdded")}</p>
       )}
+
+      <Modal
+        open={confirmDisconnect}
+        onClose={() => setConfirmDisconnect(false)}
+        variant="danger"
+        size="sm"
+        busy={pending}
+        icon={<Unplug />}
+        title={t("disconnectTitle", { name })}
+        footer={
+          <>
+            <Button onClick={() => setConfirmDisconnect(false)} disabled={pending} data-autofocus>
+              {t("keep")}
+            </Button>
+            <Button variant="danger" loading={pending} onClick={disconnect}>
+              {t("disconnect")}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-body text-text-muted">{t("disconnectText")}</p>
+      </Modal>
 
       <Modal
         open={confirm}

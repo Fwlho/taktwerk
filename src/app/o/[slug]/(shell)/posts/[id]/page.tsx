@@ -48,7 +48,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       role={role}
       userId={user.id}
       organizationName={organization.name}
-      channels={channels.map((c) => ({ id: c.id, type: c.type, name: c.name }))}
+      channels={channels.map((c) => ({ id: c.id, type: c.type, name: c.name, connected: c.connection_status === "connected" }))}
       campaigns={campaignOptions}
       members={members.map((m) => ({ userId: m.userId, fullName: m.fullName, role: m.role }))}
       siblings={siblings.map(({ body, ...s }) => ({ ...s, hasText: body.trim().length > 0 }))}

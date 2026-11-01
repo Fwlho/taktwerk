@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CalendarClock, ChevronLeft, CloudOff, Copy, Check, Send, Sparkles, Trash2, Undo2 } from "lucide-react";
+import { CalendarClock, ChevronLeft, CloudOff, Copy, Check, ExternalLink, Rocket, Send, Sparkles, Trash2, Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ChannelChip, ChannelMono } from "@/components/domain/ChannelChip";
 import { StatusBadge } from "@/components/domain/StatusBadge";
 import { Banner } from "@/components/ui/Banner";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClasses } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { Select } from "@/components/ui/Select";
 import { TextArea, TextField } from "@/components/ui/TextField";
@@ -20,6 +20,8 @@ import { canTransition, statusStep } from "@/lib/post-transitions";
 import type { MemberRole } from "@/server/db/database.types";
 import { deletePost, savePostContent, setAssignees, transferPost, transitionPost } from "@/server/posts/actions";
 import { adaptTransferred, type AiStatus } from "@/server/ai/actions";
+import { publishNow } from "@/server/publishing/actions";
+import { parsePublishError } from "@/lib/publishing";
 import { AssistantPanel } from "@/components/ai/AssistantPanel";
 import type { PostDetail, PostThread as Thread } from "@/server/posts/queries";
 import type { ChannelOption } from "@/components/campaigns/CampaignFormModal";
@@ -67,7 +69,7 @@ export function PostEditor({
   role: MemberRole;
   userId: string;
   organizationName: string;
-  channels: ChannelOption[];
+  channels: (ChannelOption & { connected?: boolean })[];
   campaigns: CampaignOption[];
   members: MemberInfo[];
   siblings: { id: string; status: PostStatus; hasText: boolean; channels: { type: ChannelOption["type"]; name: string } | null }[];
@@ -110,6 +112,7 @@ export function PostEditor({
   const [adaptOnTransfer, setAdaptOnTransfer] = useState(true);
   const [busy, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmPublish, setConfirmPublish] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [transferIds, setTransferIds] = useState<string[]>([]);
 
@@ -300,6 +303,27 @@ export function PostEditor({
     }
   }
 
+  const publishError = parsePublishError(post.publish_error);
+  // Sofort veröffentlichen: nur freigegeben/geplant, verbundener Kanal, Rolle mit Planungsrecht
+  const canPublishNow =
+    (status === "approved" || status === "scheduled") && Boolean(channel?.connected) && (role === "owner" || role === "editor") && saveState === "saved";
+
+  function doPublish() {
+    void flushThen(() =>
+      startTransition(async () => {
+        const res = await publishNow(slug, post.id);
+        setConfirmPublish(false);
+        if (res.error) {
+          const code = (res as { publishError?: string }).publishError;
+          return toast({ kind: "error", title: code ? t(`publishErrors.${code}` as never) : te(res.error) });
+        }
+        setStatus("published");
+        toast({ kind: "success", title: t("publishedNow", { channel: channel ? tc(channel.type) : "" }) });
+        router.refresh();
+      }),
+    );
+  }
+
   const canAdapt = aiStatus.configured && aiStatus.allowed && fields.body.trim().length > 0;
 
   /** KI-Text übernehmen: 2 s hinterlegen, alten Text für „Rückgängig“ zurückgeben */
@@ -339,7 +363,12 @@ export function PostEditor({
           {t("conflict")}
         </Banner>
       )}
-      {post.publish_error && <Banner kind="error">{post.publish_error}</Banner>}
+      {publishError && status === "scheduled" && (
+        <Banner kind="error">
+          {t(`publishErrors.${publishError.code}`)}
+          {publishError.detail && <span className="block text-small text-text-muted">{publishError.detail}</span>}
+        </Banner>
+      )}
       {locked && <Banner kind="info">{t("lockedHint")}</Banner>}
 
       <div className="grid gap-4 tablet:grid-cols-2">
@@ -584,10 +613,21 @@ export function PostEditor({
                 {t(secondary)}
               </Button>
             )}
+            {canPublishNow && (
+              <Button icon={<Rocket aria-hidden />} onClick={() => setConfirmPublish(true)} disabled={busy || transition.busy}>
+                {t("publishNow")}
+              </Button>
+            )}
             {primary && (
               <Button variant="primary" icon={ACTION_ICON[primary]} onClick={() => runAction(primary!)} loading={busy || transition.busy}>
                 {t(primary)}
               </Button>
+            )}
+            {(status === "published" || status === "evaluated") && post.external_url && (
+              <a href={post.external_url} target="_blank" rel="noopener noreferrer" className={buttonClasses({ variant: "secondary" })}>
+                <ExternalLink aria-hidden className="icon-sm" />
+                {t("viewPublished", { channel: channel ? tc(channel.type) : "" })}
+              </a>
             )}
           </div>
         </div>
@@ -709,6 +749,27 @@ export function PostEditor({
             </span>
           </label>
         )}
+      </Modal>
+
+      <Modal
+        open={confirmPublish}
+        onClose={() => setConfirmPublish(false)}
+        size="sm"
+        busy={busy}
+        icon={<Rocket />}
+        title={t("publishNowTitle", { channel: channel ? tc(channel.type) : "" })}
+        footer={
+          <>
+            <Button onClick={() => setConfirmPublish(false)} disabled={busy} data-autofocus>
+              {t("cancel")}
+            </Button>
+            <Button variant="primary" icon={<Rocket aria-hidden />} loading={busy} onClick={doPublish}>
+              {t("publishNowConfirm")}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-body text-text-muted">{t("publishNowText")}</p>
       </Modal>
 
       <Modal

@@ -48,7 +48,9 @@
     "conflict": "Jemand anderes hat den Beitrag gerade geändert.",
     "fileTooLarge": "Die Datei ist zu groß.",
     "nothingToSubmit": "In dieser Woche gibt es nichts mehr einzureichen.",
-    "weekEmpty": "In dieser Woche gibt es noch keine Beiträge."
+    "weekEmpty": "In dieser Woche gibt es noch keine Beiträge.",
+    "connectExpired": "Die Anmeldung ist abgelaufen. Bitte verbinde erneut.",
+    "publish": "Veröffentlichen fehlgeschlagen."
   },
   "auth": {
     "email": "E-Mail",
@@ -635,12 +637,28 @@
       "transferAdapt": "Texte mit KI an jeden Kanal anpassen",
       "transferAdaptHint": "Kostet je Kanal einen KI-Vorschlag. Ohne Häkchen wird der Text 1:1 kopiert.",
       "transferredAi": "{count, plural, one {Beitrag übertragen und angepasst} other {# Beiträge übertragen und angepasst}}",
-      "transferredNoAi": "{count, plural, one {Beitrag übertragen} other {# Beiträge übertragen}} – ohne KI-Anpassung"
+      "transferredNoAi": "{count, plural, one {Beitrag übertragen} other {# Beiträge übertragen}} – ohne KI-Anpassung",
+      "publishNow": "Jetzt veröffentlichen",
+      "publishNowTitle": "Jetzt auf {channel} veröffentlichen?",
+      "publishNowText": "Der Beitrag erscheint sofort öffentlich. Das lässt sich in Taktwerk nicht rückgängig machen – löschen geht nur direkt auf der Plattform.",
+      "publishNowConfirm": "Veröffentlichen",
+      "publishedNow": "Auf {channel} veröffentlicht",
+      "viewPublished": "Auf {channel} ansehen",
+      "publishErrors": {
+        "expired": "Veröffentlichen fehlgeschlagen: Die Verbindung ist abgelaufen. Verbinde den Kanal neu.",
+        "busy": "Die Plattform war nicht erreichbar. Taktwerk versucht es automatisch erneut.",
+        "rejected": "Die Plattform hat den Beitrag abgelehnt.",
+        "videoUnsupported": "Videos können noch nicht automatisch veröffentlicht werden.",
+        "emptyPost": "Der Beitrag hat weder Text noch Bild.",
+        "notConnected": "Der Kanal ist nicht verbunden.",
+        "tooManyImages": "Höchstens 10 Bilder pro Beitrag.",
+        "unknown": "Veröffentlichen fehlgeschlagen. Taktwerk versucht es erneut."
+      }
     }
   },
   "channels": {
     "title": "Kanäle",
-    "intro": "Wo du Beiträge veröffentlichst. Die Verbindung zu den Plattformen folgt später – planen kannst du schon jetzt.",
+    "intro": "Wo du Beiträge veröffentlichst. Verbundene Kanäle veröffentlichen freigegebene Beiträge automatisch zum geplanten Zeitpunkt.",
     "types": {
       "instagram": "Instagram",
       "facebook": "Facebook",
@@ -664,7 +682,7 @@
       "error": "Verbindungsfehler"
     },
     "offlineReady": "Bereit",
-    "connectLater": "Automatisch veröffentlichen kannst du, sobald die Plattform-Anbindung verfügbar ist.",
+    "connectLater": "Verbinden mit dieser Plattform folgt später – planen kannst du schon jetzt.",
     "connect": "Kanal verbinden",
     "add": "Kanal hinzufügen",
     "added": "{name} hinzugefügt",
@@ -674,7 +692,40 @@
     "removeTitle": "{name} entfernen?",
     "removeText": "Der Kanal verschwindet aus Planung und Filtern. Das geht nur, solange er keine Beiträge hat.",
     "keep": "Behalten",
-    "addNamed": "{name} hinzufügen"
+    "addNamed": "{name} hinzufügen",
+    "connectHint": "Verbinde deine Seite, dann gehen geplante Beiträge automatisch raus.",
+    "connectSetup": "Verbinden ist möglich, sobald der Plattform-Zugang (Meta-App) eingerichtet ist.",
+    "expiredHint": "Die Verbindung ist abgelaufen. Geplante Beiträge warten, bis du neu verbindest.",
+    "account": "Konto",
+    "reconnect": "Neu verbinden",
+    "disconnect": "Trennen",
+    "disconnected": "{name} getrennt",
+    "disconnectTitle": "{name} trennen?",
+    "disconnectText": "Taktwerk löscht die gespeicherte Anmeldung. Geplante Beiträge bleiben, werden aber erst nach erneutem Verbinden veröffentlicht.",
+    "connectErrors": {
+      "cancelled": "Verbinden abgebrochen. Du kannst es jederzeit erneut versuchen.",
+      "failed": "Die Anmeldung bei der Plattform hat nicht geklappt. Bitte versuch es noch einmal.",
+      "busy": "Die Plattform ist gerade nicht erreichbar. Bitte versuch es gleich noch einmal.",
+      "stateMismatch": "Die Anmeldung war abgelaufen oder unvollständig. Bitte starte das Verbinden neu.",
+      "metaNotConfigured": "Der Facebook-Zugang ist noch nicht eingerichtet.",
+      "forbidden": "Kanäle verbinden darf nur der Inhaber."
+    },
+    "facebook": {
+      "title": "Facebook-Seite verbinden",
+      "intro": "Wähle die Seite, auf der Taktwerk deine Beiträge veröffentlicht.",
+      "choose": "Deine Seiten",
+      "hint": "Taktwerk veröffentlicht nur freigegebene Beiträge. Die Verbindung lässt sich jederzeit trennen.",
+      "connect": "Seite verbinden",
+      "connected": "{name} ist verbunden",
+      "retry": "Erneut anmelden",
+      "back": "Zurück zu den Kanälen",
+      "expiredTitle": "Anmeldung abgelaufen",
+      "expiredText": "Melde dich erneut bei Facebook an, um eine Seite auszuwählen.",
+      "noPagesTitle": "Keine Seite gefunden",
+      "noPagesText": "Dein Facebook-Konto verwaltet keine Seite, auf der du Beiträge erstellen darfst – oder du hast bei der Anmeldung keine Seite freigegeben.",
+      "failedTitle": "Seiten konnten nicht geladen werden",
+      "failedText": "Facebook hat nicht geantwortet. Bitte melde dich erneut an."
+    }
   },
   "campaigns": {
     "title": "Kampagnen",
@@ -899,7 +950,9 @@
       "comment_added": "Neuer Kommentar",
       "post_assigned": "Dir zugewiesen",
       "week_submitted": "Woche zur Freigabe eingereicht",
-      "week_approved": "Woche freigegeben"
+      "week_approved": "Woche freigegeben",
+      "post_published": "Veröffentlicht",
+      "publish_failed": "Veröffentlichen fehlgeschlagen"
     },
     "push": {
       "approval_requested": "Bitte um Freigabe",
@@ -908,7 +961,9 @@
       "comment_added": "Neuer Kommentar",
       "post_assigned": "Dir wurde ein Beitrag zugewiesen",
       "week_submitted": "Woche zur Freigabe eingereicht",
-      "week_approved": "Deine Woche wurde freigegeben"
+      "week_approved": "Deine Woche wurde freigegeben",
+      "post_published": "Dein Beitrag ist veröffentlicht",
+      "publish_failed": "Beitrag konnte nicht veröffentlicht werden"
     },
     "testTitle": "Taktwerk",
     "testBody": "So sehen deine Benachrichtigungen aus.",

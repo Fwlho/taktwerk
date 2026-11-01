@@ -42,7 +42,8 @@ export async function sendPendingPushes(organizationId: string) {
   const { data: subs } = await admin.from("push_subscriptions").select("id, user_id, endpoint, p256dh, auth").in("user_id", userIds);
   if (!subs?.length) return;
 
-  const t = await getTranslations("notifications");
+  // Ohne Anfrage-Kontext (Hintergrund-Takt) Sprache ausdrücklich angeben
+  const t = await getTranslations({ locale: "de", namespace: "notifications" });
   await Promise.all(
     pending.flatMap((n) => {
       const payload = (n.payload ?? {}) as { title?: string; post_id?: string; week_start?: string };

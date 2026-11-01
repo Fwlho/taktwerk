@@ -425,6 +425,7 @@ export type Database = {
         Row: {
           connection_status: Database["public"]["Enums"]["connection_status"];
           created_at: string;
+          external_account_id: string | null;
           external_account_name: string | null;
           id: string;
           name: string;
@@ -437,6 +438,7 @@ export type Database = {
         Insert: {
           connection_status?: Database["public"]["Enums"]["connection_status"];
           created_at?: string;
+          external_account_id?: string | null;
           external_account_name?: string | null;
           id?: string;
           name: string;
@@ -448,6 +450,7 @@ export type Database = {
         Update: {
           connection_status?: Database["public"]["Enums"]["connection_status"];
           created_at?: string;
+          external_account_id?: string | null;
           external_account_name?: string | null;
           id?: string;
           name?: string;
@@ -904,12 +907,15 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           external_post_id: string | null;
+          external_url: string | null;
           group_id: string | null;
           id: string;
           internal_notes: string | null;
           organization_id: string;
           planned_on: string | null;
+          publish_attempts: number;
           publish_error: string | null;
+          publish_retry_at: string | null;
           published_at: string | null;
           scheduled_at: string | null;
           status: Database["public"]["Enums"]["post_status"];
@@ -926,12 +932,15 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           external_post_id?: string | null;
+          external_url?: string | null;
           group_id?: string | null;
           id?: string;
           internal_notes?: string | null;
           organization_id: string;
           planned_on?: string | null;
+          publish_attempts?: number;
           publish_error?: string | null;
+          publish_retry_at?: string | null;
           published_at?: string | null;
           scheduled_at?: string | null;
           status?: Database["public"]["Enums"]["post_status"];
@@ -947,12 +956,15 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           external_post_id?: string | null;
+          external_url?: string | null;
           group_id?: string | null;
           id?: string;
           internal_notes?: string | null;
           organization_id?: string;
           planned_on?: string | null;
+          publish_attempts?: number;
           publish_error?: string | null;
+          publish_retry_at?: string | null;
           published_at?: string | null;
           scheduled_at?: string | null;
           status?: Database["public"]["Enums"]["post_status"];
@@ -1246,6 +1258,15 @@ export type Database = {
         };
         Returns: string;
       };
+      claim_due_posts: {
+        Args: { p_limit?: number; p_post?: string };
+        Returns: {
+          attempt: number;
+          channel_id: string;
+          organization_id: string;
+          post_id: string;
+        }[];
+      };
       copy_week: {
         Args: {
           p_channel?: string;
@@ -1266,6 +1287,14 @@ export type Database = {
           p_model: string;
           p_output: number;
         };
+        Returns: undefined;
+      };
+      mark_post_failed: {
+        Args: { p_error: string; p_post: string; p_retry: boolean };
+        Returns: undefined;
+      };
+      mark_post_published: {
+        Args: { p_external_id: string; p_post: string; p_url: string };
         Returns: undefined;
       };
       my_pending_invitations: {
@@ -1308,12 +1337,15 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           external_post_id: string | null;
+          external_url: string | null;
           group_id: string | null;
           id: string;
           internal_notes: string | null;
           organization_id: string;
           planned_on: string | null;
+          publish_attempts: number;
           publish_error: string | null;
+          publish_retry_at: string | null;
           published_at: string | null;
           scheduled_at: string | null;
           status: Database["public"]["Enums"]["post_status"];
@@ -1342,12 +1374,15 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           external_post_id: string | null;
+          external_url: string | null;
           group_id: string | null;
           id: string;
           internal_notes: string | null;
           organization_id: string;
           planned_on: string | null;
+          publish_attempts: number;
           publish_error: string | null;
+          publish_retry_at: string | null;
           published_at: string | null;
           scheduled_at: string | null;
           status: Database["public"]["Enums"]["post_status"];
