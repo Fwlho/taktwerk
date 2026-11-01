@@ -91,8 +91,8 @@ docs/                   Entscheidungen, Schema
 - Commits: Deutsch, Präfix `feat:`, `fix:`, `chore:`, `test:`, `docs:`.
 
 ## Phasenplan
-- [x] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✗ (URL fehlt), CLAUDE.md ✓, DB-Schema freigegeben ✓ (`docs/datenbankschema.md`)
-- [x] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil ✓ (35 DB-, 17 Unit-, 8 Browser-Tests grün); offen: GitHub
+- [x] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✓ (github.com/Fwlho/taktwerk, Branch `main`), CLAUDE.md ✓, DB-Schema freigegeben ✓ (`docs/datenbankschema.md`)
+- [x] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil ✓ (35 DB-, 17 Unit-, 8 Browser-Tests grün)
 - [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push, Asset-Bibliothek, **Wochenplan** (s. u.)
   - Wochenplan = Ansicht auf normale Beiträge (keine eigene Datenhaltung): Woche → Plattform → Tag → Beiträge, umschaltbar auf Tag → Plattformen; mehrere Beiträge je Tag/Plattform; Fortschritt je Plattform, Statuspunkt je Tag; Beitragsfelder interne Notizen + beliebig viele KI-Prompts (text/image/video/caption, Ergebnis, Reihenfolge; kopierbar, ausführbar, als Vorlage speicherbar); Wochenvorlagen + „Vorwoche kopieren“; Woche (eine/alle Plattformen) gesammelt zur Freigabe, owner gibt gesammelt oder einzeln frei; Beitrag auf andere Plattformen übertragen (KI-Anpassung in Phase 3)
 - [ ] **3 – KI-Assistent:** Ideen, Texte, Kanalanpassung, Kampagnenvorschläge
