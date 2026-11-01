@@ -3,7 +3,7 @@ import { cache } from "react";
 import { createSupabaseServerClient } from "@/server/db/supabase";
 
 export const POST_LIST_FIELDS =
-  "id, title, body, status, planned_on, scheduled_at, published_at, publish_error, campaign_id, channel_id, group_id, created_by, updated_at, channels(type, name), campaigns(name), post_assignees(user_id), comments(count)";
+  "id, title, body, internal_notes, status, planned_on, scheduled_at, published_at, publish_error, campaign_id, channel_id, group_id, created_by, updated_at, channels(type, name), campaigns(name), post_assignees(user_id), comments(count)";
 
 export async function listPostsForCampaign(organizationId: string, campaignId: string) {
   const supabase = await createSupabaseServerClient();

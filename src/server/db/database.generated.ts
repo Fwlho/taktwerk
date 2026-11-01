@@ -1151,6 +1151,23 @@ export type Database = {
         Args: { p_invitation_id: string };
         Returns: string;
       };
+      apply_week_template: {
+        Args: { p_template: string; p_week_start: string };
+        Returns: number;
+      };
+      approve_week: {
+        Args: { p_comment?: string; p_request: string };
+        Returns: number;
+      };
+      copy_week: {
+        Args: {
+          p_channel?: string;
+          p_from: string;
+          p_org: string;
+          p_to: string;
+        };
+        Returns: number;
+      };
       create_organization: {
         Args: { p_name: string; p_slug: string };
         Returns: string;
@@ -1163,6 +1180,24 @@ export type Database = {
           organization_name: string;
           role: Database["public"]["Enums"]["member_role"];
         }[];
+      };
+      save_week_as_template: {
+        Args: {
+          p_default?: boolean;
+          p_name: string;
+          p_org: string;
+          p_week_start: string;
+        };
+        Returns: string;
+      };
+      submit_week_for_approval: {
+        Args: {
+          p_channel?: string;
+          p_message?: string;
+          p_org: string;
+          p_week_start: string;
+        };
+        Returns: string;
       };
       transition_post_status: {
         Args: {

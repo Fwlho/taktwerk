@@ -8,7 +8,7 @@ import { dbError, type ActionResult } from "@/server/action-result";
 export type NotificationItem = {
   id: string;
   type: string;
-  payload: { post_id?: string; title?: string };
+  payload: { post_id?: string; title?: string; week_start?: string; count?: number };
   read_at: string | null;
   created_at: string;
 };

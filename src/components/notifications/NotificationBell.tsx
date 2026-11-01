@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, CheckCheck, CircleCheck, Hourglass, MessageSquare, RotateCcw, UserPlus, type LucideIcon } from "lucide-react";
+import { Bell, CalendarCheck, CheckCheck, CircleCheck, Hourglass, MessageSquare, RotateCcw, UserPlus, type LucideIcon } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { cx } from "@/lib/cx";
 import { notificationLink } from "@/lib/notifications";
@@ -14,6 +14,8 @@ const ICONS: Record<string, { icon: LucideIcon; cls: string }> = {
   changes_requested: { icon: RotateCcw, cls: "bg-warning-soft text-warning" },
   comment_added: { icon: MessageSquare, cls: "bg-info-soft text-info" },
   post_assigned: { icon: UserPlus, cls: "bg-primary-soft text-primary" },
+  week_submitted: { icon: CalendarCheck, cls: "bg-status-review-soft text-status-review" },
+  week_approved: { icon: CalendarCheck, cls: "bg-success-soft text-success" },
 };
 
 const POLL_MS = 60_000;
@@ -66,7 +68,7 @@ export function NotificationBell({ slug, initialUnread, id, panelClassName, butt
       setItems((list) => list?.map((n) => (n.id === item.id ? { ...n, read_at: new Date().toISOString() } : n)) ?? null);
       void markNotificationsRead(slug, [item.id]);
     }
-    router.push(notificationLink(slug, item.type, item.payload.post_id));
+    router.push(notificationLink(slug, item.type, item.payload.post_id, item.payload.week_start));
   }
 
   async function markAll() {

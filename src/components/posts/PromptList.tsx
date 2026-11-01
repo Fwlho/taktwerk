@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { ArrowDown, ArrowUp, BookmarkPlus, Copy, Plus, Sparkles, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, BookmarkPlus, Copy, LibraryBig, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
 import { addPrompt, deletePrompt, reorderPrompts, savePromptTemplate, updatePrompt } from "@/server/posts/actions";
 import type { PostThread } from "@/server/posts/queries";
+import { listPromptTemplates } from "@/server/week/actions";
 
 type Prompt = PostThread["prompts"][number];
 const KINDS = ["text", "caption", "image", "video"] as const;
@@ -17,6 +19,8 @@ export function PromptList({ slug, postId, initial, readOnly }: { slug: string; 
   const te = useTranslations("errors");
   const toast = useToast();
   const [prompts, setPrompts] = useState(initial);
+  const [picking, setPicking] = useState(false);
+  const [templates, setTemplates] = useState<Awaited<ReturnType<typeof listPromptTemplates>> | null>(null);
   const [, startTransition] = useTransition();
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
 
@@ -38,12 +42,17 @@ export function PromptList({ slug, postId, initial, readOnly }: { slug: string; 
     );
   }
 
-  function add() {
+  function add(kind: Prompt["kind"] = "text", prompt = "") {
     startTransition(async () => {
-      const res = await addPrompt(slug, postId, { kind: "text", prompt: "", position: prompts.length });
+      const res = await addPrompt(slug, postId, { kind, prompt, position: prompts.length });
       if (res.error || !res.data) return toast({ kind: "error", title: te(res.error ?? "generic") });
-      setPrompts((ps) => [...ps, { id: res.data!.id, kind: "text", prompt: "", result: null, result_at: null, position: ps.length }]);
+      setPrompts((ps) => [...ps, { id: res.data!.id, kind, prompt, result: null, result_at: null, position: ps.length }]);
     });
+  }
+
+  function openTemplates() {
+    setPicking(true);
+    void listPromptTemplates(slug).then(setTemplates);
   }
 
   function remove(id: string) {
@@ -90,11 +99,42 @@ export function PromptList({ slug, postId, initial, readOnly }: { slug: string; 
           {t("title")}
         </h2>
         {!readOnly && (
-          <Button size="sm" variant="ghost" icon={<Plus className="icon-sm" />} onClick={add}>
-            {t("add")}
-          </Button>
+          <span className="flex gap-1">
+            <Button size="sm" variant="ghost" icon={<LibraryBig className="icon-sm" />} onClick={openTemplates}>
+              {t("fromTemplate")}
+            </Button>
+            <Button size="sm" variant="ghost" icon={<Plus className="icon-sm" />} onClick={() => add()}>
+              {t("add")}
+            </Button>
+          </span>
         )}
       </div>
+      <Modal open={picking} onClose={() => setPicking(false)} icon={<LibraryBig />} title={t("templatesTitle")}>
+        {templates === null ? (
+          <span className="skeleton block h-12" />
+        ) : templates.length === 0 ? (
+          <p className="text-body text-text-muted">{t("noTemplates")}</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {templates.map((tpl) => (
+              <li key={tpl.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPicking(false);
+                    add(tpl.kind, tpl.prompt);
+                  }}
+                  className="flex w-full flex-col gap-0.5 rounded-md border border-border p-3 text-left hover:border-border-strong hover:bg-surface-hover"
+                >
+                  <span className="text-label">{tpl.name}</span>
+                  <span className="text-caption font-normal text-text-muted">{t(`kinds.${tpl.kind}`)}</span>
+                  <span className="line-clamp-2 text-small text-text-muted">{tpl.prompt}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Modal>
       {prompts.length === 0 && <p className="text-small text-text-muted">{t("empty")}</p>}
       <ol className="flex flex-col gap-3">
         {prompts.map((p, i) => (

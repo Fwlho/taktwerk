@@ -45,12 +45,12 @@ export async function sendPendingPushes(organizationId: string) {
   const t = await getTranslations("notifications");
   await Promise.all(
     pending.flatMap((n) => {
-      const payload = (n.payload ?? {}) as { title?: string; post_id?: string };
+      const payload = (n.payload ?? {}) as { title?: string; post_id?: string; week_start?: string };
       const slug = (n.organizations as { slug: string } | null)?.slug ?? "";
       const body = JSON.stringify({
         title: t(`push.${n.type}` as never),
         body: payload.title || t("untitled"),
-        url: notificationLink(slug, n.type, payload.post_id),
+        url: notificationLink(slug, n.type, payload.post_id, payload.week_start),
         tag: `${n.type}-${payload.post_id ?? n.id}`,
       });
       return subs

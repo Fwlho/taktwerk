@@ -46,7 +46,9 @@
     "channelHasPosts": "Dieser Kanal hat noch Beiträge. Lösche oder verschiebe sie zuerst.",
     "gone": "Das gibt es nicht mehr – vielleicht wurde es gelöscht.",
     "conflict": "Jemand anderes hat den Beitrag gerade geändert.",
-    "fileTooLarge": "Die Datei ist zu groß."
+    "fileTooLarge": "Die Datei ist zu groß.",
+    "nothingToSubmit": "In dieser Woche gibt es nichts mehr einzureichen.",
+    "weekEmpty": "In dieser Woche gibt es noch keine Beiträge."
   },
   "auth": {
     "email": "E-Mail",
@@ -497,7 +499,10 @@
       "delete": "Löschen",
       "result": "Ergebnis",
       "runLater": "Ausführen folgt mit dem KI-Assistenten.",
-      "mediaHint": "Bild- und Video-Prompts zum Kopieren in dein Bild- oder Video-Werkzeug."
+      "mediaHint": "Bild- und Video-Prompts zum Kopieren in dein Bild- oder Video-Werkzeug.",
+      "fromTemplate": "Aus Vorlage",
+      "templatesTitle": "Prompt-Vorlage einfügen",
+      "noTemplates": "Noch keine Vorlagen. Speichere einen Prompt mit dem Lesezeichen-Symbol als Vorlage."
     },
     "activity": {
       "empty": "Noch keine Änderungen.",
@@ -845,14 +850,18 @@
       "post_approved": "Freigegeben",
       "changes_requested": "Änderung gewünscht",
       "comment_added": "Neuer Kommentar",
-      "post_assigned": "Dir zugewiesen"
+      "post_assigned": "Dir zugewiesen",
+      "week_submitted": "Woche zur Freigabe eingereicht",
+      "week_approved": "Woche freigegeben"
     },
     "push": {
       "approval_requested": "Bitte um Freigabe",
       "post_approved": "Beitrag freigegeben",
       "changes_requested": "Änderung gewünscht",
       "comment_added": "Neuer Kommentar",
-      "post_assigned": "Dir wurde ein Beitrag zugewiesen"
+      "post_assigned": "Dir wurde ein Beitrag zugewiesen",
+      "week_submitted": "Woche zur Freigabe eingereicht",
+      "week_approved": "Deine Woche wurde freigegeben"
     },
     "testTitle": "Taktwerk",
     "testBody": "So sehen deine Benachrichtigungen aus.",
@@ -868,6 +877,78 @@
       "unsupported": "Dieser Browser unterstützt keine Push-Nachrichten.",
       "needsInstall": "Auf iPhone und iPad: Tippe auf „Teilen“ → „Zum Home-Bildschirm“ und öffne Taktwerk von dort. Danach kannst du Push hier einschalten.",
       "denied": "Benachrichtigungen sind für diese Seite im Browser blockiert. Erlaube sie in den Website-Einstellungen des Browsers und lade die Seite neu."
+    }
+  },
+  "week": {
+    "title": "Wochenplan",
+    "intro": "Bereite die ganze Woche pro Plattform vor – alles landet automatisch in Kalender, Pipeline und Freigabe.",
+    "copyPrevious": "Vorwoche kopieren",
+    "templates": "Vorlagen",
+    "submitWeek": "Woche zur Freigabe senden",
+    "prev": "Vorherige Woche",
+    "next": "Nächste Woche",
+    "thisWeek": "Diese Woche",
+    "weekLabel": "KW {week} · {range}",
+    "progress": "{done} von {total} freigegeben",
+    "viewLabel": "Ansicht",
+    "views": {
+      "platform": "Nach Plattform",
+      "day": "Nach Tag"
+    },
+    "postCount": "{count, plural, one {# Beitrag} other {# Beiträge}}",
+    "free": "frei",
+    "today": "heute",
+    "untitled": "Ohne Titel",
+    "prompts": "{count, plural, one {# KI-Prompt} other {# KI-Prompts}}",
+    "quickAdd": "Beitrag hinzufügen …",
+    "quickAddFor": "Beitrag für {channel} am {day} hinzufügen",
+    "add": "Anlegen",
+    "dayState": {
+      "empty": "Nichts geplant",
+      "open": "In Arbeit",
+      "review": "Wartet auf Freigabe",
+      "changes": "Änderung gewünscht",
+      "done": "Alles freigegeben"
+    },
+    "submitPlatform": "{channel}: {count, plural, one {# Beitrag} other {# Beiträge}} zur Freigabe senden",
+    "submitPlatformTitle": "{channel} zur Freigabe senden",
+    "submitWeekTitle": "Woche zur Freigabe senden",
+    "submitSubtitle": "{count, plural, one {# Beitrag geht} other {# Beiträge gehen}} gesammelt an die Inhaber.",
+    "message": "Nachricht an die Inhaber",
+    "messagePlaceholder": "z. B. Bitte bis Freitag freigeben",
+    "submit": "Einreichen",
+    "cancel": "Abbrechen",
+    "submitted": "Zur Freigabe gesendet",
+    "nothingToSubmit": "Hier gibt es nichts mehr einzureichen.",
+    "copied": "{count, plural, one {# Beitrag aus der Vorwoche übernommen} other {# Beiträge aus der Vorwoche übernommen}}",
+    "nothingToCopy": "In der Vorwoche war nichts geplant.",
+    "requestBanner": "{name} hat {channel} eingereicht: {count, plural, one {# Beitrag wartet} other {# Beiträge warten}} auf Freigabe.",
+    "allPlatforms": "die ganze Woche",
+    "someone": "Jemand",
+    "reviewSingle": "Einzeln prüfen",
+    "approveAll": "{count, plural, one {Freigeben} other {Alle # freigeben}}",
+    "approvedAll": "{count, plural, one {# Beitrag freigegeben} other {# Beiträge freigegeben}}",
+    "noChannelsTitle": "Noch keine Kanäle",
+    "noChannelsText": "Leg zuerst fest, auf welchen Plattformen ihr postet – dann kannst du die Woche planen.",
+    "toChannels": "Kanäle anlegen",
+    "templatesModal": {
+      "title": "Wochenvorlagen",
+      "subtitle": "Eine feste Wochenstruktur, z. B. Mo Instagram-Tipp, Mi Facebook-Angebot.",
+      "applyTitle": "Vorlage auf diese Woche anwenden",
+      "none": "Noch keine Vorlage.",
+      "slots": "{count, plural, one {# Beitrag} other {# Beiträge}}",
+      "apply": "Anwenden",
+      "delete": "{name} löschen",
+      "default": "Standard",
+      "applyHint": "Legt die Beiträge der Vorlage als Ideen in dieser Woche an – vorhandene Beiträge bleiben.",
+      "applied": "{count, plural, one {# Beitrag angelegt} other {# Beiträge angelegt}}",
+      "saveTitle": "Diese Woche als Vorlage speichern",
+      "name": "Name der Vorlage",
+      "namePlaceholder": "z. B. Standardwoche",
+      "makeDefault": "Als Standard markieren",
+      "save": "Vorlage speichern",
+      "saved": "Vorlage gespeichert",
+      "weekEmpty": "Plane zuerst Beiträge in dieser Woche – dann kannst du sie als Vorlage speichern."
     }
   }
 }
