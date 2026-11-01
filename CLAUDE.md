@@ -25,7 +25,7 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 - **lucide-react** – vom Design vorgegebene Icon-Bibliothek.
 - **dnd-kit** – Drag & Drop mit Tastatur- und Touch-Unterstützung (vom Design gefordert).
 - **date-fns** (Locale `de`) – leichtgewichtig, baumförmig importierbar.
-- **Serwist** – gepflegter Nachfolger von next-pwa für Service Worker/PWA.
+- **Eigener kleiner Service Worker (`public/sw.js`) statt Serwist** – nur Push + Installierbarkeit nötig, keine Zwischenspeicherung personenbezogener Seiten; Serwist erst, falls Offline-Betrieb gebraucht wird.
 - **web-push** (VAPID) – Standardbibliothek für Web-Push ohne Fremddienst.
 - **pg_cron + Job-Tabelle** – geplante Veröffentlichungen laufen in Supabase (EU), kein zusätzlicher Dienstleister.
 - **Verschlüsselung AES-256-GCM (node:crypto)** – Plattform-Tokens verschlüsselt, Schlüssel nur in `TOKEN_ENCRYPTION_KEY`.
@@ -36,7 +36,7 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 - **Tailwind v4 aus Tokens** – `npm run tokens` erzeugt `src/styles/tokens.css` (`@theme` + Dunkelmodus + Typo-Utilities `text-h1` …). Abstände im 4-px-Raster: nur Stufen 1,2,3,4,5,6,8,10,12,16.
 - **Natives `<select>`** für Einfachauswahl – Tastatur, Screenreader und Bottom-Sheet am Smartphone kommen vom System; eigene Liste erst bei Mehrfachauswahl mit Monogrammen (Phase 2).
 - **`<dialog>` für Modals, Popover-API für Menüs** – Fokusfalle, Esc und Rückfokus ohne Zusatzbibliothek.
-- **Supabase-Schlüssel neu benannt** – `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Browser) und `SUPABASE_SECRET_KEY` (nur Server, nur für Einladungs-Mails).
+- **Supabase-Schlüssel neu benannt** – `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (Browser) und `SUPABASE_SECRET_KEY` (nur Server: Einladungs-Mails und Push-Versand an andere Personen).
 
 ## Architekturregeln
 - **Mandantenfähig:** jede fachliche Tabelle hat `organization_id`; Zugriff über RLS. Ausnahmen (nutzerbezogen/global) sind im Schema begründet.
@@ -59,6 +59,10 @@ Webbasiertes Marketing-Portal für kleine Betriebe ohne Marketingabteilung (Hand
 
 ## Routen
 `/login` `/signup` `/forgot-password` `/set-password` `/auth/confirm` `/start` (Unternehmen wählen, Einladungen) `/organizations/new` `/invite/[token]` · App: `/o/[slug]/…` (Dashboard, calendar, campaigns, posts, approvals, reports, channels, settings/{company,team,account}), `/o/[slug]/onboarding`.
+
+## Push
+- VAPID-Schlüssel in `.env.local` (`NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). Versand nach Server Actions per `after(() => sendPendingPushes(orgId))`; Benachrichtigungen selbst erzeugen DB-Trigger/`transition_post_status`.
+- Push braucht HTTPS (oder localhost): auf dem Handy erst nach Veröffentlichung im Netz bzw. über einen HTTPS-Tunnel testbar.
 
 ## Lokale Umgebung
 - Starten für den Nutzer: Doppelklick auf `Taktwerk-starten.cmd` (startet Docker Desktop falls nötig, dann `supabase start`, dann `npm run dev`, öffnet den Browser). Docker startet nach einem Neustart nicht automatisch.
@@ -93,7 +97,7 @@ docs/                   Entscheidungen, Schema
 ## Phasenplan
 - [x] **0 – Vorbereitung:** Design gelesen ✓, Git ✓, GitHub ✓ (github.com/Fwlho/taktwerk, Branch `main`), CLAUDE.md ✓, DB-Schema freigegeben ✓ (`docs/datenbankschema.md`)
 - [x] **1 – Fundament:** Setup, Tokens + Basiskomponenten, Registrierung/Login, Unternehmen, Einladungen, Rollen, Onboarding-Profil, Navigation Desktop/Mobil ✓ (35 DB-, 17 Unit-, 8 Browser-Tests grün)
-- [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push, Asset-Bibliothek, **Wochenplan** (s. u.)
+- [ ] **2 – Kern:** Kanäle (ohne Verbindung), Kampagnen, Beiträge + Status, Kanban, Kalender, Freigabe + Kommentare, Benachrichtigungen/Push ✓, Asset-Bibliothek ✓, Kanäle/Kampagnen/Beiträge/Kanban/Kalender/Freigabe ✓, **Wochenplan** offen (s. u.)
   - Wochenplan = Ansicht auf normale Beiträge (keine eigene Datenhaltung): Woche → Plattform → Tag → Beiträge, umschaltbar auf Tag → Plattformen; mehrere Beiträge je Tag/Plattform; Fortschritt je Plattform, Statuspunkt je Tag; Beitragsfelder interne Notizen + beliebig viele KI-Prompts (text/image/video/caption, Ergebnis, Reihenfolge; kopierbar, ausführbar, als Vorlage speicherbar); Wochenvorlagen + „Vorwoche kopieren“; Woche (eine/alle Plattformen) gesammelt zur Freigabe, owner gibt gesammelt oder einzeln frei; Beitrag auf andere Plattformen übertragen (KI-Anpassung in Phase 3)
 - [ ] **3 – KI-Assistent:** Ideen, Texte, Kanalanpassung, Kampagnenvorschläge
 - [ ] **4 – Messen & Steuern:** Offline-Maßnahmen (QR/Rabattcode), Budget, Kennzahlen manuell, Dashboard, Monatsbericht

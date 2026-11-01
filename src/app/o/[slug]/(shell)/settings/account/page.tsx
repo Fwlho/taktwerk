@@ -1,9 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { AccountNameForm } from "@/components/organization/AccountNameForm";
 import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
+import { PushSettings } from "@/components/notifications/PushSettings";
 import { requireUser } from "@/server/auth/session";
 
-export default async function AccountPage() {
+export default async function AccountPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const user = await requireUser();
   const t = await getTranslations("account");
   return (
@@ -14,6 +16,10 @@ export default async function AccountPage() {
           <p className="text-body text-text-muted">{t("emailInfo", { email: user.email })}</p>
         </div>
         <AccountNameForm fullName={user.fullName} />
+      </section>
+      <section className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-5 tablet:p-6">
+        <h2 className="text-h2">{t("pushTitle")}</h2>
+        <PushSettings slug={slug} />
       </section>
       <section className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-5 tablet:p-6">
         <h2 className="text-h2">{t("appearanceTitle")}</h2>

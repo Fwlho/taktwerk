@@ -58,7 +58,11 @@ test("Beitrag einreichen und mobil freigeben", async ({ page, browser }, testInf
   const phone = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: "de-DE" });
   const p2 = await phone.newPage();
   await login(p2, owner);
-  await p2.goto(`/o/${slug}/approvals/review`);
+  // Glocke zeigt die Freigabe-Anfrage; Tipp führt direkt in die Freigabe
+  await p2.goto(`/o/${slug}/posts`);
+  await p2.getByRole("button", { name: "1 neue Benachrichtigung" }).first().click();
+  await p2.getByRole("button", { name: /Bittet um Freigabe/ }).click();
+  await expect(p2).toHaveURL(/\/approvals\/review\?start=/);
   await expect(p2.getByText("1 von 1")).toBeVisible();
   await p2.getByRole("button", { name: "Freigeben" }).click();
   await expect(p2.getByRole("heading", { name: "Alles freigegeben" })).toBeVisible();

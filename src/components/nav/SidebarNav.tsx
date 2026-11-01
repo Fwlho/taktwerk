@@ -7,6 +7,7 @@ import type { MemberRole } from "@/server/db/database.types";
 import { cx } from "@/lib/cx";
 import { Avatar } from "@/components/ui/Avatar";
 import { LogoMark } from "@/components/ui/Logo";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { AccountMenu } from "./AccountMenu";
 import { isActive, navItemsFor } from "./nav-items";
 
@@ -16,10 +17,11 @@ export type SidebarNavProps = {
   userName: string;
   organizationName: string;
   pendingApprovals: number;
+  unreadNotifications: number;
 };
 
 /** Hauptnavigation ab bp-tablet: eingeklappt (72px) bis bp-desktop, darüber 248px mit Labels. */
-export function SidebarNav({ slug, role, userName, organizationName, pendingApprovals }: SidebarNavProps) {
+export function SidebarNav({ slug, role, userName, organizationName, pendingApprovals, unreadNotifications }: SidebarNavProps) {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const base = `/o/${slug}`;
@@ -78,10 +80,20 @@ export function SidebarNav({ slug, role, userName, organizationName, pendingAppr
           <ul className="mt-4 flex flex-col gap-1 border-t border-border pt-4 desktop:mt-0 desktop:border-0 desktop:pt-0">{companyItems}</ul>
         </>
       )}
+      <div className="mt-auto flex flex-col">
+        <NotificationBell
+          id="notifications-side"
+          slug={slug}
+          initialUnread={unreadNotifications}
+          showLabel
+          buttonClassName="h-11 justify-center desktop:h-10 desktop:justify-start desktop:px-3"
+          panelClassName="bottom-4 left-[calc(var(--size-sidebar-collapsed)+var(--space-2))] desktop:left-[calc(var(--size-sidebar)+var(--space-2))]"
+        />
+      </div>
       <button
         type="button"
         popoverTarget="account-menu-side"
-        className="mt-auto flex items-center justify-center gap-3 rounded-md border-t border-border p-3 text-left hover:bg-surface-hover desktop:justify-start"
+        className="flex items-center justify-center gap-3 rounded-md border-t border-border p-3 text-left hover:bg-surface-hover desktop:justify-start"
         aria-label={t("account.open")}
       >
         <Avatar name={userName} size="lg" external={role === "external"} />

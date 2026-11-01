@@ -24,9 +24,10 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: "npm run dev",
+    // Betriebsmodus (wie beim Nutzer): schnell und ohne Übersetzen beim ersten Aufruf
+    command: "npm run build && npm run start",
     url: "http://localhost:3000/login",
     reuseExistingServer: true,
-    timeout: 120_000,
+    timeout: 420_000,
   },
 });

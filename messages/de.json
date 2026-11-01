@@ -360,7 +360,8 @@
       "system": "Wie Gerät",
       "light": "Hell",
       "dark": "Dunkel"
-    }
+    },
+    "pushTitle": "Benachrichtigungen auf diesem Gerät"
   },
   "posts": {
     "status": {
@@ -828,5 +829,45 @@
     "pickTitle": "Aus der Mediathek wählen",
     "pickSubmit": "{count, plural, =0 {Hinzufügen} one {# Datei hinzufügen} other {# Dateien hinzufügen}}",
     "cancel": "Abbrechen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "bell": "Benachrichtigungen",
+    "bellUnread": "{count, plural, one {# neue Benachrichtigung} other {# neue Benachrichtigungen}}",
+    "markAll": "Alle gelesen",
+    "unread": "ungelesen",
+    "untitled": "Ohne Titel",
+    "loadError": "Konnte nicht geladen werden. Bitte später erneut versuchen.",
+    "emptyTitle": "Alles erledigt",
+    "emptyText": "Hier erscheint, wenn jemand um Freigabe bittet, kommentiert oder dir etwas zuweist.",
+    "types": {
+      "approval_requested": "Bittet um Freigabe",
+      "post_approved": "Freigegeben",
+      "changes_requested": "Änderung gewünscht",
+      "comment_added": "Neuer Kommentar",
+      "post_assigned": "Dir zugewiesen"
+    },
+    "push": {
+      "approval_requested": "Bitte um Freigabe",
+      "post_approved": "Beitrag freigegeben",
+      "changes_requested": "Änderung gewünscht",
+      "comment_added": "Neuer Kommentar",
+      "post_assigned": "Dir wurde ein Beitrag zugewiesen"
+    },
+    "testTitle": "Taktwerk",
+    "testBody": "So sehen deine Benachrichtigungen aus.",
+    "settings": {
+      "intro": "Bekomme eine Nachricht aufs Gerät, wenn jemand um Freigabe bittet, kommentiert oder dir etwas zuweist. Ein Tipp öffnet direkt den Beitrag.",
+      "enable": "Push einschalten",
+      "disable": "Ausschalten",
+      "test": "Testnachricht senden",
+      "enabled": "Push ist eingeschaltet",
+      "disabled": "Push ist ausgeschaltet",
+      "testSent": "Testnachricht gesendet",
+      "noDevice": "Auf diesem Gerät ist Push noch nicht eingeschaltet.",
+      "unsupported": "Dieser Browser unterstützt keine Push-Nachrichten.",
+      "needsInstall": "Auf iPhone und iPad: Tippe auf „Teilen“ → „Zum Home-Bildschirm“ und öffne Taktwerk von dort. Danach kannst du Push hier einschalten.",
+      "denied": "Benachrichtigungen sind für diese Seite im Browser blockiert. Erlaube sie in den Website-Einstellungen des Browsers und lade die Seite neu."
+    }
   }
 }

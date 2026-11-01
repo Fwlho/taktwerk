@@ -120,3 +120,14 @@ export async function countPendingApprovals(organizationId: string) {
     .eq("status", "in_review");
   return count ?? 0;
 }
+
+export async function countUnreadNotifications(organizationId: string, userId: string) {
+  const supabase = await createSupabaseServerClient();
+  const { count } = await supabase
+    .from("notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("organization_id", organizationId)
+    .eq("user_id", userId)
+    .is("read_at", null);
+  return count ?? 0;
+}

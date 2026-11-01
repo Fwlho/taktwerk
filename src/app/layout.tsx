@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ThemeScript } from "@/components/theme/ThemeScript";
 import { ToastProvider } from "@/components/ui/Toast";
+import { ServiceWorker } from "@/components/notifications/ServiceWorker";
 import { colorToken } from "@/lib/tokens";
 import "./globals.css";
 
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <NextIntlClientProvider>
           <ToastProvider>{children}</ToastProvider>
+          <ServiceWorker />
         </NextIntlClientProvider>
       </body>
     </html>

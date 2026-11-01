@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { z } from "zod";
 import { POST_STATUSES } from "@/lib/domain";
 import { berlinLocalToIso, todayBerlin } from "@/lib/format";
@@ -8,6 +9,7 @@ import { newPostSchema, postContentSchema, type NewPostFormValues, type PostCont
 import { getOrgContext, requirePermission } from "@/server/auth/session";
 import { createSupabaseServerClient } from "@/server/db/supabase";
 import { dbError, guard, type ActionResult } from "@/server/action-result";
+import { sendPendingPushes } from "@/server/push/send";
 
 const berlinDay = (iso: string) => todayBerlin(new Date(iso));
 
@@ -94,7 +96,7 @@ export async function transitionPost(
   return guard(async () => {
     const parsedTo = statusSchema.safeParse(to);
     if (!parsedTo.success) return { error: "invalid" };
-    await getOrgContext(slug);
+    const { organization } = await getOrgContext(slug);
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase.rpc("transition_post_status", {
       p_post_id: postId,
@@ -102,6 +104,7 @@ export async function transitionPost(
       p_comment: comment?.trim() || undefined,
     });
     if (error) return { error: dbError(error) };
+    after(() => sendPendingPushes(organization.id));
     revalidatePosts(slug);
     return { ok: true, data: { status: data.status, version: data.version } };
   });
@@ -112,7 +115,7 @@ export async function transitionPosts(slug: string, postIds: string[], to: strin
     const parsedTo = statusSchema.safeParse(to);
     const ids = z.array(z.uuid()).min(1).max(200).safeParse(postIds);
     if (!parsedTo.success || !ids.success) return { error: "invalid" };
-    await getOrgContext(slug);
+    const { organization } = await getOrgContext(slug);
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.rpc("transition_posts_status", {
       p_post_ids: ids.data,
@@ -120,6 +123,7 @@ export async function transitionPosts(slug: string, postIds: string[], to: strin
       p_comment: comment?.trim() || undefined,
     });
     if (error) return { error: dbError(error) };
+    after(() => sendPendingPushes(organization.id));
     revalidatePosts(slug);
     return { ok: true };
   });
@@ -261,6 +265,7 @@ export async function setAssignees(slug: string, postId: string, userIds: string
         .from("post_assignees")
         .insert(add.map((user_id) => ({ post_id: postId, user_id, organization_id: organization.id })));
       if (e) return { error: dbError(e) };
+      after(() => sendPendingPushes(organization.id));
     }
     revalidatePosts(slug);
     return { ok: true };
@@ -282,6 +287,8 @@ export async function addComment(slug: string, postId: string, input: { body: st
       quoted_text: parsed.data.quotedText || null,
     });
     if (error) return { error: dbError(error) };
+    after(() => sendPendingPushes(organization.id));
+
     revalidatePath(`/o/${slug}/posts/${postId}`);
     return { ok: true };
   });
