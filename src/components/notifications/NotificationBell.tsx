@@ -101,7 +101,7 @@ export function NotificationBell({ slug, initialUnread, id, panelClassName, butt
         popover="auto"
         aria-label={t("title")}
         className={cx(
-          "fixed inset-auto m-0 flex max-h-[min(560px,80dvh)] w-[min(380px,calc(100vw-2*var(--space-4)))] flex-col overflow-hidden rounded-lg border border-border bg-surface p-0 text-text shadow-lg",
+          "fixed inset-auto m-0 hidden open:flex max-h-[min(560px,80dvh)] w-[min(380px,calc(100vw-2*var(--space-4)))] flex-col overflow-hidden rounded-lg border border-border bg-surface p-0 text-text shadow-lg",
           panelClassName,
         )}
       >
